@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Pokémon GO Evaluator</title>
 
-   <!-- Emoji Favicon -->
+  <!-- Emoji Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐️</text></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
   
   <style>
-  /* Theme Variables */
   :root {
     --bg-color: #f4f4f7;
     --text-color: #333;
@@ -94,9 +93,6 @@
   .slider-wrapper { margin-bottom: 8px; padding: 0 4px; }
   .slider-header { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--slider-text); }
   
-  /* --------------------------------- */
-  /* DIGIT-BY-DIGIT ROLLER ENGINE  */
-  /* --------------------------------- */
   .digit-roller {
     display: inline-flex;
     justify-content: flex-end;
@@ -134,16 +130,7 @@
     font-size: 15px;
     font-weight: 700;
   }
-  .app-footer {
-    margin-top: 24px;
-    margin-bottom: 8px;
-    font-size: 11px;
-    color: var(--text-color);
-    opacity: 0.6;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-  
+
   .slider-container-inner {
     position: relative;
     display: flex;
@@ -172,42 +159,60 @@
     cursor: pointer; 
   }
 
+  /* Horizontal Pill-shaped Thumb/Knob lying flat on the track */
   input[type=range]::-webkit-slider-thumb { 
     appearance: none; 
     -webkit-appearance: none; 
-    height: 20px; 
-    width: 20px; 
-    border-radius: 50%; 
+    width: 24px;         /* Horizontal length */
+    height: 14.8px;      /* Flat height */
+    border-radius: 7.4px;/* Pill shape */
     background: #fff; 
     border: 1px solid #ccc; 
-    margin-top: -7px; 
+    margin-top: -4.4px;  /* Center vertically: (6px track height - 14.8px thumb height) / 2 = -4.4px */
     box-shadow: 0 2px 5px rgba(0,0,0,0.25); 
     cursor: pointer; 
     transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; 
   }
 
-  .slider::-webkit-slider-thumb:hover {
+  /* Firefox Pill Thumb support */
+  input[type=range]::-moz-range-thumb {
+    width: 24px;
+    height: 14.8px;
+    border-radius: 7.4px;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  /* Warm yellow state on hover, click, or active dragging */
+  .slider::-webkit-slider-thumb:hover,
+  .slider::-webkit-slider-thumb:active,
+  .slider:active::-webkit-slider-thumb,
+  .slider::-moz-range-thumb:hover,
+  .slider::-moz-range-thumb:active,
+  .slider:active::-moz-range-thumb {
     transform: scale(1.1);
     background-color: #facc15; 
     border-color: #ca8a04;     
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
   
-  /* Symmetrical tick marks positioning */
   .slider-marks { 
     display: flex; 
     justify-content: space-between; 
-    padding: 0 12px; 
+    padding: 0 10px; /* Offset padding to align ticks with center of 24px wide horizontal pill thumb */
     pointer-events: none; 
     align-items: center; 
   }
 
   .slider-marks.top-marks { 
-    margin-bottom: 5px; 
+    margin-bottom: 4px; 
   }
 
   .slider-marks.bottom-marks { 
-    margin-top: 5px; 
+    margin-top: 4px; 
   }
 
   .slider-marks i { 
@@ -259,6 +264,16 @@
   
   .stat-label { 
     font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; 
+  }
+
+  .app-footer {
+    margin-top: 24px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--text-color);
+    opacity: 0.6;
+    text-align: center;
+    letter-spacing: 0.5px;
   }
   </style>
 
@@ -374,7 +389,6 @@
       const ivString = `${ivPercent}% IV (${ivSum}/45)`;
       const maxArcLength = 47.12; 
 
-      // Calculate star emojis based on standard Pokémon GO appraisal thresholds
       let starsDisplay = "—";
       if (ivSum === 45) {
         starsDisplay = "★★★★";
