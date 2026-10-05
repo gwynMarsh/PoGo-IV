@@ -91,7 +91,7 @@ body.dark-mode {
     .cp-input { margin-bottom: 16px; }
     
     .slider-wrapper { margin-bottom: 8px; padding: 0 4px; }
-    .slider-header { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--slider-text); }
+    .slider-header { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--slider-text); }
     
     /* --------------------------------- */
     /* DIGIT-BY-DIGIT ROLLER ENGINE  */
@@ -182,8 +182,11 @@ body.dark-mode {
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     
-    .slider-marks { display: flex; justify-content: space-between; padding: 0 12px; margin-top: 8px; pointer-events: none; }
-    .slider-marks i { width: 1px; height: 3px; background: var(--mark-color); border-radius: 50%; }
+    .slider-marks { display: flex; justify-content: space-between; padding: 0 12px; pointer-events: none; align-items: center; }
+    .slider-marks.top-marks { margin-bottom: 6px; }
+    .slider-marks.bottom-marks { margin-top: 6px; }
+
+    .slider-marks i { width: 1px; height: 3px; background: var(--mark-color); border-radius: 50%; display: block; }
     .slider-marks i:nth-child(1),
     .slider-marks i:nth-child(6),
     .slider-marks i:nth-child(11),
@@ -233,7 +236,7 @@ body.dark-mode {
     function toggleTheme() {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
-      document.getElementById('theme-btn').innerText = isDark ? '☀️' : '🌙';
+      document.getElementById('theme-btn').innerText = isDark ? '☀️️' : '🌙';
       localStorage.setItem('app-theme', isDark ? 'dark' : 'light');
     }
 
@@ -427,31 +430,37 @@ body.dark-mode {
     <datalist id="pokemon-list"></datalist>
     <input id="cp" class="cp-input" type="number" inputmode="numeric" placeholder="CP" autocomplete="off" oninput="calcAll()">
     
+    <!-- Attack Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
         <span>Attack</span>
         <div class="digit-roller" id="atk-val-roller"></div>
       </div>
+      <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <input type="range" id="atk" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('atk'); calcAll()">
-      <div class="slider-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
 
+    <!-- Defense Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
         <span>Defense</span>
         <div class="digit-roller" id="def-val-roller"></div>
       </div>
+      <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <input type="range" id="def" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('def'); calcAll()">
-      <div class="slider-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
 
+    <!-- HP Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
         <span>HP</span>
         <div class="digit-roller" id="hp-val-roller"></div>
       </div>
+      <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <input type="range" id="hp" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('hp'); calcAll()">
-      <div class="slider-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
   </div>
 
@@ -460,7 +469,7 @@ body.dark-mode {
     <div id="result-stars" class="result-stars">—</div>
     <div id="result-sub" class="result-sub">100.00% IV (45/45) • Enter Name & CP</div>
     
-    <div class="result-stats"> 
+    <div class="result-stats"> 
       <div class="stat-col">
         <div class="gauge-box">
           <svg viewBox="0 0 36 21" class="gauge-svg">
