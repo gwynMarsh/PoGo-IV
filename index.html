@@ -159,7 +159,7 @@
     cursor: pointer; 
   }
 
-  /* Base WebKit Pill-shaped Thumb (29.2px x 18px) */
+  /* WebKit Horizontal Pill Thumb (Chrome, Safari, Edge) */
   input[type=range]::-webkit-slider-thumb { 
     appearance: none; 
     -webkit-appearance: none; 
@@ -174,7 +174,7 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; 
   }
 
-  /* Base Firefox Pill-shaped Thumb */
+  /* Firefox Horizontal Pill Thumb */
   input[type=range]::-moz-range-thumb {
     width: 29.2px;
     height: 18px;
@@ -186,15 +186,22 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
   }
 
-  /* Reliable Warm Yellow State on Hover & Active Sliding */
+  /* WEBKIT HOVER & ACTIVE (Separated so Chrome/Safari don't drop the rule) */
   input[type=range]:hover::-webkit-slider-thumb,
   input[type=range]:active::-webkit-slider-thumb,
-  input[type=range]::-webkit-slider-thumb:active,
+  input[type=range]::-webkit-slider-thumb:active {
+    background-color: #facc15 !important;
+    border-color: #ca8a04 !important;
+    transform: scale(1.08);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  /* FIREFOX HOVER & ACTIVE (Separated so Firefox doesn't drop the rule) */
   input[type=range]:hover::-moz-range-thumb,
   input[type=range]:active::-moz-range-thumb,
   input[type=range]::-moz-range-thumb:active {
-    background-color: #facc15 !important; 
-    border-color: #ca8a04 !important; 
+    background-color: #facc15 !important;
+    border-color: #ca8a04 !important;
     transform: scale(1.08);
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
