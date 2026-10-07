@@ -31,7 +31,7 @@
       const cpInput = document.getElementById("cp");
       let currentVal = parseInt(cpInput.value, 10);
       if (isNaN(currentVal)) {
-        currentVal = amount > 0 ? 10 : 10;
+        currentVal = 10;
       } else {
         currentVal = Math.max(10, currentVal + amount);
       }
@@ -143,13 +143,13 @@
       if (ivSum === 45) {
         starsDisplay = "★★★★";
       } else if (ivSum >= 37) {
-        starsDisplay = "★★★";
+        starsDisplay = "★★★☆";
       } else if (ivSum >= 30) {
-        starsDisplay = "★★";
+        starsDisplay = "★★☆☆";
       } else if (ivSum >= 23) {
-        starsDisplay = "★";
+        starsDisplay = "★☆☆☆";
       } else {
-        starsDisplay = "☆";
+        starsDisplay = "☆☆☆☆";
       }
 
       const resetGauges = () => {
@@ -172,7 +172,7 @@
       if (!nameInput || !cp || !lowerCaseDb[nameInput]) {
         resMain.innerText = "Level ?";
         resStars.innerText = starsDisplay;
-        resSub.innerText = lowerCaseDb[nameInput] ? `${ivString} • Enter CP` : "Enter Name & CP";
+        resSub.innerText = lowerCaseDb[nameInput] ? "Enter CP" : "Enter Name & CP";
         resetGauges();
         return;
       }
@@ -274,20 +274,15 @@
     </div>
   </div>
 
-<div class="result-container">
-  <!-- Pinned Header Row (Level on Left, IV Badge on Right) -->
-  <div class="result-header-row">
-    <div id="result-main" class="result-main">Level ???</div>
-    <div class="result-badge-group">
-      <span id="result-stars" class="result-stars">—</span>
-      <span id="result-sub" class="result-sub">Enter Name & CP</span>
+  <div class="result-container">
+    <!-- Fixed Pinned Header Row -->
+    <div class="result-header-row">
+      <div id="result-main" class="result-main">Level ?</div>
+      <div class="result-badge-group">
+        <span id="result-stars" class="result-stars">—</span>
+        <span id="result-sub" class="result-sub">Enter Name & CP</span>
+      </div>
     </div>
-  </div>
-  
-  <div class="result-stats">
-    <!-- Existing ATK / DEF / HP Gauges -->
-  </div>
-</div>
     
     <div class="result-stats"> 
       <div class="stat-col">
@@ -330,6 +325,7 @@
       </div>
     </div>
   </div>
+  
   <div class="app-footer">
     © 2026 GwynMarsh • Pokémon GO Evaluator
   </div>
