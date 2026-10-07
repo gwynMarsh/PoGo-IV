@@ -39,37 +39,48 @@
       calcAll();
     }
 
-    function updateAvatar(speciesName) {
-      const avatarImg = document.getElementById("pokemon-avatar");
-      if (!speciesName) {
-        avatarImg.style.display = "none";
-        avatarImg.src = "";
-        return;
-      }
+   function updateAvatar(speciesName) {
+  const avatarImg = document.getElementById("pokemon-avatar");
+  
+  if (!speciesName) {
+    avatarImg.style.display = "none";
+    avatarImg.classList.remove('loaded');
+    avatarImg.src = "";
+    return;
+  }
 
-      // Convert name format for PokeAPI artwork (e.g., "Tapu Koko" -> "tapu-koko", "Mr. Mime" -> "mr-mime")
-      const formattedName = speciesName
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .trim()
-        .replace(/\s+/g, '-');
+  // Format species name (e.g., "Tapu Koko" -> "tapukoko")
+  const formattedName = speciesName.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-      const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonId}.png`;
+  // 3D HOME Artwork CDN URL (Fast & Name-based)
+  const spriteUrl = `https://play.pokemonshowdown.com/sprites/dex/${formattedName}.png`;
+  const fallbackUrl = `https://play.pokemonshowdown.com/sprites/gen5/${formattedName}.png`;
 
-      avatarImg.src = spriteUrl;
-      avatarImg.alt = speciesName;
-      avatarImg.style.display = "inline-block";
+  // 1. Reset class before loading new image
+  avatarImg.classList.remove('loaded');
+  avatarImg.alt = speciesName;
+  avatarImg.style.display = "inline-block";
 
-      // Fallback to Showdown sprite if PokeAPI official artwork fails
-      avatarImg.onerror = function() {
-        if (this.src !== fallbackUrl) {
-          this.src = fallbackUrl;
-        } else {
-          this.style.display = "none";
-        }
-      };
+  // 2. Add onload listener to trigger the fade-in animation
+  avatarImg.onload = function() {
+    this.classList.add('loaded');
+  };
+
+  // 3. Handle broken image links
+  avatarImg.onerror = function() {
+    if (this.src !== fallbackUrl) {
+      this.src = fallbackUrl;
+    } else {
+      this.style.display = "none";
+      this.classList.remove('loaded');
     }
+  };
 
+  // 4. Set src LAST to initiate loading
+  avatarImg.src = spriteUrl;
+}
+
+    
     window.onload = function() {
       if (localStorage.getItem('app-theme') === 'dark') {
         document.body.classList.add('dark-mode');
