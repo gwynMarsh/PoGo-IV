@@ -31,12 +31,44 @@
       const cpInput = document.getElementById("cp");
       let currentVal = parseInt(cpInput.value, 10);
       if (isNaN(currentVal)) {
-        currentVal = amount > 0 ? 10 : 10;
+        currentVal = 10;
       } else {
         currentVal = Math.max(10, currentVal + amount);
       }
       cpInput.value = currentVal;
       calcAll();
+    }
+
+    function updateAvatar(speciesName) {
+      const avatarImg = document.getElementById("pokemon-avatar");
+      if (!speciesName) {
+        avatarImg.style.display = "none";
+        avatarImg.src = "";
+        return;
+      }
+
+      // Convert name format for PokeAPI artwork (e.g., "Tapu Koko" -> "tapu-koko", "Mr. Mime" -> "mr-mime")
+      const formattedName = speciesName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+
+      const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${formattedName}.png`;
+      const fallbackUrl = `https://play.pokemonshowdown.com/sprites/gen5/${formattedName.replace(/-/g, '')}.png`;
+
+      avatarImg.src = spriteUrl;
+      avatarImg.alt = speciesName;
+      avatarImg.style.display = "inline-block";
+
+      // Fallback to Showdown sprite if PokeAPI official artwork fails
+      avatarImg.onerror = function() {
+        if (this.src !== fallbackUrl) {
+          this.src = fallbackUrl;
+        } else {
+          this.style.display = "none";
+        }
+      };
     }
 
     window.onload = function() {
@@ -136,20 +168,20 @@
 
       const ivSum = atkIV + defIV + hpIV;
       const ivPercent = ((ivSum / 45) * 100).toFixed(2);
-      const ivString = `${ivPercent}% IV (${ivSum}/45)`;
+      const ivString = `${ivPercent}% IV`;
       const maxArcLength = 47.12; 
 
       let starsDisplay = "—";
       if (ivSum === 45) {
         starsDisplay = "★★★★";
       } else if (ivSum >= 37) {
-        starsDisplay = "★★★";
+        starsDisplay = "★★★☆";
       } else if (ivSum >= 30) {
-        starsDisplay = "★★";
+        starsDisplay = "★★☆☆";
       } else if (ivSum >= 23) {
-        starsDisplay = "★";
+        starsDisplay = "★☆☆☆";
       } else {
-        starsDisplay = "☆";
+        starsDisplay = "☆☆☆☆";
       }
 
       const resetGauges = () => {
@@ -160,6 +192,7 @@
         atkArc.style.strokeDashoffset = maxArcLength;
         defArc.style.strokeDashoffset = maxArcLength;
         hpArc.style.strokeDashoffset = maxArcLength;
+        updateAvatar("");
       };
 
       if (typeof baseStatsDb === 'undefined' || typeof cpmTable === 'undefined') {
@@ -172,10 +205,15 @@
       if (!nameInput || !cp || !lowerCaseDb[nameInput]) {
         resMain.innerText = "Level ?";
         resStars.innerText = starsDisplay;
-        resSub.innerText = lowerCaseDb[nameInput] ? `${ivString} • Enter CP` : `${ivString} • Enter valid species`;
+        resSub.innerText = lowerCaseDb[nameInput] ? `${ivString}` : `${ivString}`;
         resetGauges();
+        if (lowerCaseDb[nameInput]) {
+          updateAvatar(nameInput);
+        }
         return;
       }
+
+      updateAvatar(nameInput);
 
       const base = lowerCaseDb[nameInput];
       const totalAtk = base[0] + atkIV;
@@ -274,14 +312,20 @@
     </div>
   </div>
 
-<div class="result-container">
-  <div class="result-header-row">
-    <div id="result-main" class="result-main">Level ???</div>
-    <div class="result-badge-group">
-      <div id="result-stars" class="result-stars">—</div>
-      <div id="result-sub" class="result-sub">100.00% IV</div>
+  <div class="result-container">
+    <!-- Pokémon Sprite Avatar -->
+    <div class="pokemon-avatar-wrapper">
+      <img id="pokemon-avatar" class="pokemon-avatar" src="" alt="" style="display: none;">
     </div>
-  </div>
+
+    <!-- Compact Level Header Row -->
+    <div class="result-header-row">
+      <div id="result-main" class="result-main">Level ???</div>
+      <div class="result-badge-group">
+        <div id="result-stars" class="result-stars">—</div>
+        <div id="result-sub" class="result-sub">100.00% IV</div>
+      </div>
+    </div>
     
     <div class="result-stats"> 
       <div class="stat-col">
@@ -324,6 +368,7 @@
       </div>
     </div>
   </div>
+  
   <div class="app-footer">
     © 2026 GwynMarsh • Pokémon GO Evaluator
   </div>
