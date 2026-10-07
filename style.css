@@ -56,7 +56,14 @@ h2 { margin: 0; font-size: 22px; }
   padding: 4px;
 }
 
-.input-group { display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-bottom: 20px; text-align: left; }
+.input-group { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: stretch; 
+  gap: 16px; 
+  margin-bottom: 20px; 
+  text-align: left; 
+}
 
 input[type="text"], 
 input[type="number"] { 
@@ -122,6 +129,7 @@ input[type="number"] {
 .slider-wrapper { margin-bottom: 8px; padding: 0 4px; }
 .slider-header { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--slider-text); }
 
+/* DIGIT ROLLER ENGINE */
 .digit-roller {
   display: inline-flex;
   justify-content: flex-end;
@@ -188,7 +196,7 @@ input[type=range]::-webkit-slider-runnable-track {
   cursor: pointer; 
 }
 
-/* WebKit Horizontal Pill Thumb (Chrome, Safari, Edge) */
+/* WebKit Horizontal Pill Thumb (29.2px x 18px) */
 input[type=range]::-webkit-slider-thumb { 
   appearance: none; 
   -webkit-appearance: none; 
@@ -243,13 +251,8 @@ input[type=range]::-moz-range-thumb:active {
   align-items: center; 
 }
 
-.slider-marks.top-marks { 
-  margin-bottom: 4px; 
-}
-
-.slider-marks.bottom-marks { 
-  margin-top: 4px; 
-}
+.slider-marks.top-marks { margin-bottom: 4px; }
+.slider-marks.bottom-marks { margin-top: 4px; }
 
 .slider-marks i { 
   width: 1px; 
@@ -269,6 +272,7 @@ input[type=range]::-moz-range-thumb:active {
   border-radius: 2px;
 }
 
+/* RESULT CONTAINER & SPRITE AVATAR STYLES */
 .result-container {
   background-color: var(--result-bg) !important;
   border: var(--result-border);
@@ -279,7 +283,34 @@ input[type=range]::-moz-range-thumb:active {
   box-shadow: 0 4px 12px var(--result-shadow);
   transition: background-color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
 }
-/* Result Header Flex Container */
+
+.pokemon-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+  margin-bottom: 6px;
+}
+
+.pokemon-avatar {
+  max-height: 76px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .result-header-row {
   display: flex;
   align-items: center;
@@ -289,53 +320,79 @@ input[type=range]::-moz-range-thumb:active {
   margin-bottom: 4px;
 }
 
-.result-main {
-  font-size: 22px;
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 1.1;
+.result-main { 
+  font-size: 22px; 
+  font-weight: 800; 
+  color: #ffffff; 
+  line-height: 1.2;
 }
 
 .result-badge-group {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   padding: 4px 10px;
   border-radius: 20px;
 }
 
-.result-stars {
-  font-size: 14px;
-  letter-spacing: 2px;
-  color: #facc15;
+.result-stars { 
+  font-size: 14px; 
+  letter-spacing: 2px; 
+  color: #facc15; 
   line-height: 1;
 }
 
-.result-sub {
-  font-size: 13px;
-  font-weight: 600;
-  color: #d1d5db;
+.result-sub { 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: #d1d5db; 
   line-height: 1;
 }
 
 .result-stats { 
-  display: flex; justify-content: space-evenly; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.15); 
+  display: flex; 
+  justify-content: space-evenly; 
+  margin-top: 14px; 
+  padding-top: 14px; 
+  border-top: 1px solid rgba(255, 255, 255, 0.15); 
 }
+
 .stat-col { 
-  flex: 1; display: flex; flex-direction: column; align-items: center; position: relative;
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  position: relative;
 }
+
 .stat-col:not(:last-child) {
   border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .gauge-box {
-  position: relative; width: 72px; height: 42px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 2px;
+  position: relative; 
+  width: 72px; 
+  height: 42px; 
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  margin-bottom: 2px;
 }
-.gauge-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+.gauge-svg { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+}
 
 .stat-label { 
-  font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; 
+  font-size: 11px; 
+  font-weight: 700; 
+  letter-spacing: 0.5px; 
+  margin-top: 2px; 
 }
 
 .app-footer {
