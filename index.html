@@ -54,8 +54,7 @@
         .trim()
         .replace(/\s+/g, '-');
 
-      const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${formattedName}.png`;
-      const fallbackUrl = `https://play.pokemonshowdown.com/sprites/gen5/${formattedName.replace(/-/g, '')}.png`;
+const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonId}.png`;
 
       avatarImg.src = spriteUrl;
       avatarImg.alt = speciesName;
