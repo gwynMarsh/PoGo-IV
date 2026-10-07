@@ -136,7 +136,7 @@
 
       const ivSum = atkIV + defIV + hpIV;
       const ivPercent = ((ivSum / 45) * 100).toFixed(2);
-      const ivString = `${ivPercent}% IV (${ivSum}/45)`;
+      const ivString = `${ivPercent}% IV`;
       const maxArcLength = 47.12; 
 
       let starsDisplay = "—";
@@ -172,7 +172,7 @@
       if (!nameInput || !cp || !lowerCaseDb[nameInput]) {
         resMain.innerText = "Level ?";
         resStars.innerText = starsDisplay;
-        resSub.innerText = lowerCaseDb[nameInput] ? `${ivString} • Enter CP` : `${ivString} • Enter valid species`;
+        resSub.innerText = lowerCaseDb[nameInput] ? `${ivString} • Enter CP` : "Enter Name & CP";
         resetGauges();
         return;
       }
