@@ -54,7 +54,7 @@
         .trim()
         .replace(/\s+/g, '-');
 
-const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonId}.png`;
+      const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonId}.png`;
 
       avatarImg.src = spriteUrl;
       avatarImg.alt = speciesName;
@@ -212,7 +212,36 @@ const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/spri
         return;
       }
 
-      updateAvatar(nameInput);
+      function updateAvatar(speciesName) {
+  const avatarImg = document.getElementById("pokemon-avatar");
+  if (!speciesName) {
+    avatarImg.style.display = "none";
+    avatarImg.src = "";
+    return;
+  }
+
+  // Format species name (e.g., "Tapu Koko" -> "tapukoko", "Mr. Mime" -> "mrmime")
+  const formattedName = speciesName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  // High-speed 3D HOME artwork (fast & text-based)
+  const primaryUrl = `https://play.pokemonshowdown.com/sprites/gen5/${formattedName}.png`;
+  const home3DUrl = `https://play.pokemonshowdown.com/sprites/dex/${formattedName}.png`;
+
+  avatarImg.src = home3DUrl;
+  avatarImg.alt = speciesName;
+  avatarImg.style.display = "inline-block";
+
+  // Fallback if 3D sprite is missing
+  avatarImg.onerror = function() {
+    if (this.src !== primaryUrl) {
+      this.src = primaryUrl;
+    } else {
+      this.style.display = "none";
+    }
+  };
+}
+
+      
 
       const base = lowerCaseDb[nameInput];
       const totalAtk = base[0] + atkIV;
