@@ -421,6 +421,8 @@ button:focus-visible {
 .result-level-group {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   flex: 1 1 110px;
   min-width: 0;
   gap: 5px;
@@ -439,6 +441,9 @@ button:focus-visible {
   color: #aaaaaa;
   line-height: 1.4;
   overflow-wrap: anywhere;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
 /* Right: stars and IV percentage */
