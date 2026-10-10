@@ -215,36 +215,34 @@ let lowerCaseDb = {};
         return;
       }
 
-      const matchingLevels = levels.filter(item =>
-        calculateCP(base, atkIV, defIV, hpIV, item.cpm) === cp
-      );
+     // Find the closest possible level, even when CP is not an exact match.
+const totalAtk = base[0] + atkIV;
+const totalDef = base[1] + defIV;
+const totalSta = base[2] + hpIV;
 
-      if (!matchingLevels.length) {
-        showInvalidResult('No matching level for this CP and IV set');
-        return;
-      }
+const bestMatch = levels.reduce((best, item) => {
+  const bestCP = calculateCP(base, atkIV, defIV, hpIV, best.cpm);
+  const itemCP = calculateCP(base, atkIV, defIV, hpIV, item.cpm);
 
-      // The inverse estimate helps rank exact CP matches, but never overrides
-      // the direct integer-CP check above.
-      const totalAtk = base[0] + atkIV;
-      const totalDef = base[1] + defIV;
-      const totalSta = base[2] + hpIV;
-      const targetCPM = Math.sqrt((10 * cp) /
-        (totalAtk * Math.sqrt(totalDef) * Math.sqrt(totalSta)));
-      const bestMatch = matchingLevels.reduce((best, item) =>
-        Math.abs(item.cpm - targetCPM) < Math.abs(best.cpm - targetCPM) ? item : best
-      );
-      const selectedCPM = bestMatch.cpm;
+  return Math.abs(itemCP - cp) < Math.abs(bestCP - cp)
+    ? item
+    : best;
+});
+
+const selectedCPM = bestMatch.cpm;
+const estimatedCP = calculateCP(base, atkIV, defIV, hpIV, selectedCPM);
+const isExactMatch = estimatedCP === cp;
+        
 
       const calculatedAtk = Number((totalAtk * selectedCPM).toFixed(1));
       const calculatedDef = Number((totalDef * selectedCPM).toFixed(1));
       const calculatedHp = Math.max(10, Math.floor(totalSta * selectedCPM));
 
-      resMain.innerText = 'Level ' + bestMatch.level;
-      resStars.innerText = starsDisplay;
-      resSub.innerText = ivString + (matchingLevels.length > 1
-        ? ' · ' + matchingLevels.length + ' possible levels'
-        : '');
+     resMain.innerText = (isExactMatch ? 'Level ' : 'Est. Level ') + bestMatch.level;
+resStars.innerText = starsDisplay;
+
+resSub.innerText = ivString +
+  (isExactMatch ? ' · Exact CP match' : ' · Closest CP: ' + estimatedCP);
 
       updateDigitRoll('atk-gauge-roller', calculatedAtk, 15);
       updateDigitRoll('def-gauge-roller', calculatedDef, 15);
