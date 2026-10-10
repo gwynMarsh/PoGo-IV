@@ -125,6 +125,8 @@ let lowerCaseDb = {};
     function showInvalidResult(message) {
       document.getElementById('result-main').innerText = 'Level ?';
       document.getElementById('result-stars').innerText = '—';
+    document.getElementById('result-cp').innerText = message;
+    document.getElementById('result-sub').innerText = '—';
       document.getElementById('result-sub').innerText = message;
       resetGauges();
     }
@@ -238,11 +240,15 @@ const isExactMatch = estimatedCP === cp;
       const calculatedDef = Number((totalDef * selectedCPM).toFixed(1));
       const calculatedHp = Math.max(10, Math.floor(totalSta * selectedCPM));
 
-     resMain.innerText = (isExactMatch ? 'Level ' : '~ Level ') + bestMatch.level;
+     resMain.innerText = (isExactMatch ? 'Level ' : 'Est. Level ') + bestMatch.level;
 resStars.innerText = starsDisplay;
 
-resSub.innerText = ivString +
-  (isExactMatch ? ' · Exact CP match' : ' · Closest CP: ' + estimatedCP);
+resSub.innerText = ivString;
+
+document.getElementById('result-cp').innerText =
+  isExactMatch
+    ? 'Exact CP match'
+    : 'Closest CP: ' + estimatedCP;
 
       updateDigitRoll('atk-gauge-roller', calculatedAtk, 15);
       updateDigitRoll('def-gauge-roller', calculatedDef, 15);
