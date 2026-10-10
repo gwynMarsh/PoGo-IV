@@ -200,17 +200,6 @@
         return;
       }
 
-      if (cpRaw === '' || !Number.isFinite(cp) || !Number.isInteger(cp)) {
-        cpInput.removeAttribute('max');
-        showInvalidResult('Enter a whole-number CP');
-        return;
-      }
-      if (cp < 10) {
-        cpInput.removeAttribute('max');
-        showInvalidResult('CP must be at least 10');
-        return;
-      }
-
       const levels = Object.entries(cpmTable)
         .map(([level, cpm]) => ({ level: Number(level), cpm: Number(cpm) }))
         .filter(item => Number.isFinite(item.level) && Number.isFinite(item.cpm))
@@ -229,6 +218,18 @@
       cpInput.max = String(maxCP);
       cpInput.step = '1';
 
+      if (cpRaw === '') {
+        showInvalidResult('Enter CP · Max for these IVs: ' + maxCP);
+        return;
+      }
+      if (!Number.isFinite(cp) || !Number.isInteger(cp)) {
+        showInvalidResult('CP must be a whole number (10–' + maxCP + ')');
+        return;
+      }
+      if (cp < 10) {
+        showInvalidResult('CP must be at least 10');
+        return;
+      }
       if (cp > maxCP) {
         showInvalidResult('Max CP for these IVs: ' + maxCP);
         return;
