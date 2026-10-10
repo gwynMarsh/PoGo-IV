@@ -213,13 +213,22 @@
       // The table includes level 51 for the temporary Best Buddy boost.
       // Derive the valid maximum for the selected Pokémon and IV combination.
       const maxLevel = levels[levels.length - 1];
-      const maxCP = calculateCP(base, atkIV, defIV, hpIV, maxLevel.cpm);
+      const level50 = levels.find(item => item.level === 50);
+      const maxCP50 = calculateCP(base, atkIV, defIV, hpIV, (level50 || maxLevel).cpm);
+      const maxCP51 = calculateCP(base, atkIV, defIV, hpIV, maxLevel.cpm);
+      const maxCP = maxCP51;
       cpInput.min = '10';
       cpInput.max = String(maxCP);
       cpInput.step = '1';
 
+      const cpHint = document.getElementById('cp-hint');
+      if (cpHint) {
+        cpHint.textContent = 'Max CP: ' + maxCP50 + ' at Lv. 50 · ' +
+          maxCP51 + ' with Best Buddy (Lv. 51)';
+      }
+
       if (cpRaw === '') {
-        showInvalidResult('Enter CP · Max for these IVs: ' + maxCP);
+        showInvalidResult('Enter CP · Max at Lv. 50: ' + maxCP50);
         return;
       }
       if (!Number.isFinite(cp) || !Number.isInteger(cp)) {
@@ -296,6 +305,7 @@
       <input id="cp" class="cp-input" type="number" inputmode="numeric" min="10" step="1" aria-label="Pokémon Combat Power (CP)" placeholder="CP" autocomplete="off" oninput="calcAll()">
       <button class="cp-btn" type="button" onclick="changeCP(1)">+</button>
     </div>
+    <div id="cp-hint" class="cp-hint" aria-live="polite">Choose a Pokémon to see its maximum CP.</div>
     
     <!-- Attack Slider -->
     <div class="slider-wrapper">
