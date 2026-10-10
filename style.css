@@ -406,34 +406,68 @@ button:focus-visible {
   }
 }
 
-/* Allow the result heading to adapt to smaller screens */
+/* Result card header */
+
 .result-header-row {
-  flex-wrap: wrap;
-  align-items: center;
+  display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
-}
-
-/* Keep the level number together */
-.result-main {
-  white-space: nowrap;
-  line-height: 1.2;
-  flex-shrink: 0;
-}
-
-/* Allow the IV badge to move to another row */
-.result-badge-group {
-  margin-left: 0;
-  max-width: 100%;
-  min-width: 0;
   flex-wrap: wrap;
-  border-radius: 12px;
+}
+
+/* Left: level and CP explanation */
+
+.result-level-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 110px;
+  min-width: 0;
+  gap: 5px;
+}
+
+.result-main {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+.result-cp {
+  font-size: 12px;
+  font-weight: 400;
+  color: #aaaaaa;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* Right: stars and IV percentage */
+
+.result-badge-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  max-width: 100%;
+  margin-left: auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
 }
 
-/* Let long descriptions wrap naturally */
+.result-stars {
+  color: #facc15;
+  font-size: 12px;
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+
 .result-sub {
-  white-space: normal;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
+  color: #e5e7eb;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
 }
