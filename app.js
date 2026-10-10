@@ -238,7 +238,7 @@ const isExactMatch = estimatedCP === cp;
       const calculatedDef = Number((totalDef * selectedCPM).toFixed(1));
       const calculatedHp = Math.max(10, Math.floor(totalSta * selectedCPM));
 
-     resMain.innerText = (isExactMatch ? 'Level ' : 'Est. Level ') + bestMatch.level;
+     resMain.innerText = (isExactMatch ? 'Lv. ' : '~ Lv. ') + bestMatch.level;
 resStars.innerText = starsDisplay;
 
 resSub.innerText = ivString +
