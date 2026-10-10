@@ -379,3 +379,29 @@ input[type=range]::-moz-range-thumb:active {
   text-align: center;
   letter-spacing: 0.5px;
 }
+
+.cp-hint {
+  margin-top: -12px;
+  margin-bottom: 4px;
+  color: var(--slider-text);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+input:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--val-color);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
