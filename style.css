@@ -405,3 +405,35 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Allow the result heading to adapt to smaller screens */
+.result-header-row {
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Keep the level number together */
+.result-main {
+  white-space: nowrap;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+/* Allow the IV badge to move to another row */
+.result-badge-group {
+  margin-left: 0;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+/* Let long descriptions wrap naturally */
+.result-sub {
+  white-space: normal;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
