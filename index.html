@@ -133,16 +133,6 @@
       updateDigitRoll(id + '-val-roller', val, 20);
     }
 
-    // Pokémon GO CP is floored to an integer after applying CPM squared.
-    function calculateCP(base, atkIV, defIV, hpIV, cpm) {
-      const attack = base[0] + atkIV;
-      const defense = base[1] + defIV;
-      const stamina = base[2] + hpIV;
-      return Math.max(10, Math.floor(
-        attack * Math.sqrt(defense) * Math.sqrt(stamina) * cpm * cpm / 10
-      ));
-    }
-
     function resetGauges() {
       const maxArcLength = 47.12;
       ['atk', 'def', 'hp'].forEach(id => {
