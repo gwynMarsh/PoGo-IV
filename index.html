@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokémon GO Evaluator</title>
 
   <!-- Emoji Favicon -->
@@ -20,65 +20,80 @@
   <script>
     let lowerCaseDb = {};
 
+    // Guard localStorage: privacy settings can make it unavailable.
+    function getSavedTheme() {
+      try { return localStorage.getItem('app-theme'); }
+      catch (error) { return null; }
+    }
+
+    function saveTheme(theme) {
+      try { localStorage.setItem('app-theme', theme); }
+      catch (error) { /* Theme still works for this page view. */ }
+    }
+
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-mode', isDark);
+      const button = document.getElementById('theme-btn');
+      if (button) {
+        button.innerText = isDark ? '☀️' : '🌙';
+        button.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+      }
+    }
+
     function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      document.getElementById('theme-btn').innerText = isDark ? '☀️' : '🌙';
-      localStorage.setItem('app-theme', isDark ? 'dark' : 'light');
+      const isDark = !document.body.classList.contains('dark-mode');
+      applyTheme(isDark ? 'dark' : 'light');
+      saveTheme(isDark ? 'dark' : 'light');
     }
 
     function changeCP(amount) {
-      const cpInput = document.getElementById("cp");
-      let currentVal = parseInt(cpInput.value, 10);
-      if (isNaN(currentVal)) {
-        currentVal = 10;
-      } else {
-        currentVal = Math.max(10, currentVal + amount);
-      }
-      cpInput.value = currentVal;
+      const cpInput = document.getElementById('cp');
+      const currentVal = Number(cpInput.value);
+      const nextVal = Number.isFinite(currentVal) && Number.isInteger(currentVal)
+        ? Math.max(10, currentVal + amount)
+        : 10;
+      cpInput.value = String(nextVal);
       calcAll();
     }
 
-    window.onload = function() {
-      if (localStorage.getItem('app-theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('theme-btn').innerText = '☀️';
-      }
+    window.addEventListener('DOMContentLoaded', function() {
+      applyTheme(getSavedTheme() === 'dark' ? 'dark' : 'light');
 
-      const datalist = document.getElementById("pokemon-list");
+      const datalist = document.getElementById('pokemon-list');
       if (typeof baseStatsDb !== 'undefined') {
         Object.keys(baseStatsDb).forEach(name => {
-          const option = document.createElement("option");
+          const option = document.createElement('option');
           option.value = name;
           datalist.appendChild(option);
           lowerCaseDb[name.toLowerCase()] = baseStatsDb[name];
         });
       }
-      
+
       ['atk', 'def', 'hp'].forEach(id => updateVal(id));
       calcAll();
-    };
+    });
 
     function updateDigitRoll(containerId, newValue, height) {
       const container = document.getElementById(containerId);
       if (!container) return;
 
-      const currentValStr = container.dataset.val || "";
+      const currentValStr = container.dataset.val || '';
       const newValStr = String(newValue);
-
       if (currentValStr === newValStr) return;
 
       if (currentValStr.length !== newValStr.length) {
         container.innerHTML = '';
-        for (let char of newValStr) {
+        for (const char of newValStr) {
           const col = document.createElement('div');
           col.className = 'digit-col';
           col.style.height = height + 'px';
-
           const strip = document.createElement('div');
           strip.className = 'digit-strip';
-          strip.innerHTML = `<div style="height: ${height}px">${char}</div>`;
-
+          const face = document.createElement('div');
+          face.style.height = height + 'px';
+          face.textContent = char;
+          strip.appendChild(face);
           col.appendChild(strip);
           container.appendChild(col);
         }
@@ -87,121 +102,169 @@
         for (let i = 0; i < newValStr.length; i++) {
           if (currentValStr[i] !== newValStr[i]) {
             const strip = strips[i];
-            
+            if (!strip) continue;
             strip.style.transition = 'none';
             strip.style.transform = 'translateY(0)';
-            
-            strip.innerHTML = `
-              <div style="height: ${height}px">${currentValStr[i]}</div>
-              <div style="height: ${height}px">${newValStr[i]}</div>
-            `;
-            
-            void strip.offsetHeight; 
-            
+            strip.replaceChildren();
+            for (const char of [currentValStr[i], newValStr[i]]) {
+              const face = document.createElement('div');
+              face.style.height = height + 'px';
+              face.textContent = char;
+              strip.appendChild(face);
+            }
+            void strip.offsetHeight;
             strip.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.35, 1)';
-            strip.style.transform = `translateY(-${height}px)`;
+            strip.style.transform = 'translateY(-' + height + 'px)';
           }
         }
       }
-      
       container.dataset.val = newValStr;
     }
 
     function updateVal(id) {
       const slider = document.getElementById(id);
-      const val = parseInt(slider.value, 10);
-      
-      const min = parseInt(slider.min, 10) || 0;
-      const max = parseInt(slider.max, 10) || 15;
+      if (!slider) return;
+      const val = Number(slider.value);
+      const min = Number(slider.min) || 0;
+      const max = Number(slider.max) || 15;
       const percent = ((val - min) / (max - min)) * 100;
-      slider.style.setProperty('--percent', `${percent}%`);
-      
+      slider.style.setProperty('--percent', percent + '%');
       updateDigitRoll(id + '-val-roller', val, 20);
     }
 
+    // Pokémon GO CP is floored to an integer after applying CPM squared.
+    function calculateCP(base, atkIV, defIV, hpIV, cpm) {
+      const attack = base[0] + atkIV;
+      const defense = base[1] + defIV;
+      const stamina = base[2] + hpIV;
+      return Math.max(10, Math.floor(
+        attack * Math.sqrt(defense) * Math.sqrt(stamina) * cpm * cpm / 10
+      ));
+    }
+
+    function resetGauges() {
+      const maxArcLength = 47.12;
+      ['atk', 'def', 'hp'].forEach(id => {
+        updateDigitRoll(id + '-gauge-roller', '—', 15);
+        const arc = document.getElementById(id + '-arc');
+        if (arc) arc.style.strokeDashoffset = maxArcLength;
+      });
+    }
+
+    function showInvalidResult(message) {
+      document.getElementById('result-main').innerText = 'Level ?';
+      document.getElementById('result-stars').innerText = '—';
+      document.getElementById('result-sub').innerText = message;
+      resetGauges();
+    }
+
     function calcAll() {
-      const resMain = document.getElementById("result-main");
-      const resStars = document.getElementById("result-stars");
-      const resSub = document.getElementById("result-sub");
-      
-      const atkArc = document.getElementById("atk-arc");
-      const defArc = document.getElementById("def-arc");
-      const hpArc = document.getElementById("hp-arc");
-
-      const nameInput = document.getElementById("name").value.trim().toLowerCase();
-      const cp = Number(document.getElementById("cp").value);
-      const atkIV = Number(document.getElementById("atk").value) || 0;
-      const defIV = Number(document.getElementById("def").value) || 0;
-      const hpIV = Number(document.getElementById("hp").value) || 0;
-
+      const resMain = document.getElementById('result-main');
+      const resStars = document.getElementById('result-stars');
+      const resSub = document.getElementById('result-sub');
+      const nameInput = document.getElementById('name').value.trim().toLowerCase();
+      const cpInput = document.getElementById('cp');
+      const cpRaw = cpInput.value.trim();
+      const cp = Number(cpRaw);
+      const atkIV = Number(document.getElementById('atk').value);
+      const defIV = Number(document.getElementById('def').value);
+      const hpIV = Number(document.getElementById('hp').value);
       const ivSum = atkIV + defIV + hpIV;
       const ivPercent = ((ivSum / 45) * 100).toFixed(2);
-      const ivString = `${ivPercent}% IV`;
-      const maxArcLength = 47.12; 
+      const ivString = ivPercent + '% IV';
+      const maxArcLength = 47.12;
 
-      let starsDisplay = "—";
-      if (ivSum === 45) {
-        starsDisplay = "★★★★";
-      } else if (ivSum >= 37) {
-        starsDisplay = "★★★";
-      } else if (ivSum >= 30) {
-        starsDisplay = "★★";
-      } else if (ivSum >= 23) {
-        starsDisplay = "★";
-      } else {
-        starsDisplay = "☆";
-      }
-
-      const resetGauges = () => {
-        updateDigitRoll('atk-gauge-roller', '-', 15);
-        updateDigitRoll('def-gauge-roller', '-', 15);
-        updateDigitRoll('hp-gauge-roller', '-', 15);
-        resStars.innerText = "—";
-        atkArc.style.strokeDashoffset = maxArcLength;
-        defArc.style.strokeDashoffset = maxArcLength;
-        hpArc.style.strokeDashoffset = maxArcLength;
-      };
+      let starsDisplay = '—';
+      if (ivSum === 45) starsDisplay = '★★★★';
+      else if (ivSum >= 37) starsDisplay = '★★★';
+      else if (ivSum >= 30) starsDisplay = '★★';
+      else if (ivSum >= 23) starsDisplay = '★';
+      else starsDisplay = '☆';
 
       if (typeof baseStatsDb === 'undefined' || typeof cpmTable === 'undefined') {
-        resMain.innerText = "Error";
-        resSub.innerText = "db.js not found";
-        resetGauges();
-        return;
-      }
-
-      if (!nameInput || !cp || !lowerCaseDb[nameInput]) {
-        resMain.innerText = "Level ?";
-        resStars.innerText = starsDisplay;
-        resSub.innerText = lowerCaseDb[nameInput] ? "Enter CP" : "Enter Name & CP";
-        resetGauges();
+        showInvalidResult('Database unavailable');
         return;
       }
 
       const base = lowerCaseDb[nameInput];
+      if (!nameInput || !base) {
+        cpInput.removeAttribute('max');
+        showInvalidResult('Enter a Pokémon name');
+        return;
+      }
+
+      if (!Number.isInteger(atkIV) || atkIV < 0 || atkIV > 15 ||
+          !Number.isInteger(defIV) || defIV < 0 || defIV > 15 ||
+          !Number.isInteger(hpIV) || hpIV < 0 || hpIV > 15) {
+        showInvalidResult('IVs must be 0–15');
+        return;
+      }
+
+      if (cpRaw === '' || !Number.isFinite(cp) || !Number.isInteger(cp)) {
+        cpInput.removeAttribute('max');
+        showInvalidResult('Enter a whole-number CP');
+        return;
+      }
+      if (cp < 10) {
+        cpInput.removeAttribute('max');
+        showInvalidResult('CP must be at least 10');
+        return;
+      }
+
+      const levels = Object.entries(cpmTable)
+        .map(([level, cpm]) => ({ level: Number(level), cpm: Number(cpm) }))
+        .filter(item => Number.isFinite(item.level) && Number.isFinite(item.cpm))
+        .sort((a, b) => a.level - b.level);
+
+      if (!levels.length) {
+        showInvalidResult('CPM table unavailable');
+        return;
+      }
+
+      // The table includes level 51 for the temporary Best Buddy boost.
+      // Derive the valid maximum for the selected Pokémon and IV combination.
+      const maxLevel = levels[levels.length - 1];
+      const maxCP = calculateCP(base, atkIV, defIV, hpIV, maxLevel.cpm);
+      cpInput.min = '10';
+      cpInput.max = String(maxCP);
+      cpInput.step = '1';
+
+      if (cp > maxCP) {
+        showInvalidResult('Max CP for these IVs: ' + maxCP);
+        return;
+      }
+
+      const matchingLevels = levels.filter(item =>
+        calculateCP(base, atkIV, defIV, hpIV, item.cpm) === cp
+      );
+
+      if (!matchingLevels.length) {
+        showInvalidResult('No matching level for this CP and IV set');
+        return;
+      }
+
+      // The inverse estimate helps rank exact CP matches, but never overrides
+      // the direct integer-CP check above.
       const totalAtk = base[0] + atkIV;
       const totalDef = base[1] + defIV;
       const totalSta = base[2] + hpIV;
-      const targetCPM = Math.sqrt((10 * cp) / (totalAtk * Math.sqrt(totalDef) * Math.sqrt(totalSta)));
+      const targetCPM = Math.sqrt((10 * cp) /
+        (totalAtk * Math.sqrt(totalDef) * Math.sqrt(totalSta)));
+      const bestMatch = matchingLevels.reduce((best, item) =>
+        Math.abs(item.cpm - targetCPM) < Math.abs(best.cpm - targetCPM) ? item : best
+      );
+      const selectedCPM = bestMatch.cpm;
 
-      let closestLevel = 1.0;
-      let minDiff = Infinity;
-      for (const [lvl, cpm] of Object.entries(cpmTable)) {
-        const diff = Math.abs(targetCPM - cpm);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestLevel = lvl;
-        }
-      }
-
-      const selectedCPM = cpmTable[closestLevel];
       const calculatedAtk = Number((totalAtk * selectedCPM).toFixed(1));
       const calculatedDef = Number((totalDef * selectedCPM).toFixed(1));
       const calculatedHp = Math.max(10, Math.floor(totalSta * selectedCPM));
 
-      resMain.innerText = `Level ${closestLevel}`;
+      resMain.innerText = 'Level ' + bestMatch.level;
       resStars.innerText = starsDisplay;
-      resSub.innerText = ivString;
-      
+      resSub.innerText = ivString + (matchingLevels.length > 1
+        ? ' · ' + matchingLevels.length + ' possible levels'
+        : '');
+
       updateDigitRoll('atk-gauge-roller', calculatedAtk, 15);
       updateDigitRoll('def-gauge-roller', calculatedDef, 15);
       updateDigitRoll('hp-gauge-roller', calculatedHp, 15);
@@ -210,10 +273,9 @@
       const atkRatio = Math.min(1, calculatedAtk / statCap);
       const defRatio = Math.min(1, calculatedDef / statCap);
       const hpRatio = Math.min(1, calculatedHp / statCap);
-
-      atkArc.style.strokeDashoffset = maxArcLength * (1 - atkRatio);
-      defArc.style.strokeDashoffset = maxArcLength * (1 - defRatio);
-      hpArc.style.strokeDashoffset = maxArcLength * (1 - hpRatio);
+      document.getElementById('atk-arc').style.strokeDashoffset = maxArcLength * (1 - atkRatio);
+      document.getElementById('def-arc').style.strokeDashoffset = maxArcLength * (1 - defRatio);
+      document.getElementById('hp-arc').style.strokeDashoffset = maxArcLength * (1 - hpRatio);
     }
   </script>
 </head>
@@ -230,7 +292,7 @@
     <!-- CP Field with Custom Stepper Buttons -->
     <div class="cp-wrapper">
       <button class="cp-btn" type="button" onclick="changeCP(-1)">−</button>
-      <input id="cp" class="cp-input" type="number" inputmode="numeric" placeholder="CP" autocomplete="off" oninput="calcAll()">
+      <input id="cp" class="cp-input" type="number" inputmode="numeric" min="10" step="1" aria-label="Pokémon Combat Power (CP)" placeholder="CP" autocomplete="off" oninput="calcAll()">
       <button class="cp-btn" type="button" onclick="changeCP(1)">+</button>
     </div>
     
@@ -242,7 +304,7 @@
       </div>
       <div class="slider-container-inner">
         <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="atk" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('atk'); calcAll()">
+        <input type="range" id="atk" class="slider" aria-label="Attack IV" min="0" max="15" step="1" value="15" oninput="updateVal('atk'); calcAll()">
         <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
@@ -255,7 +317,7 @@
       </div>
       <div class="slider-container-inner">
         <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="def" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('def'); calcAll()">
+        <input type="range" id="def" class="slider" aria-label="Defense IV" min="0" max="15" step="1" value="15" oninput="updateVal('def'); calcAll()">
         <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
@@ -268,7 +330,7 @@
       </div>
       <div class="slider-container-inner">
         <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="hp" class="slider" min="0" max="15" step="1" value="15" oninput="updateVal('hp'); calcAll()">
+        <input type="range" id="hp" class="slider" aria-label="HP IV" min="0" max="15" step="1" value="15" oninput="updateVal('hp'); calcAll()">
         <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
