@@ -26,8 +26,10 @@
   </div>
   
   <div class="input-group">
-    <input id="name" type="text" list="pokemon-list" placeholder="Pokémon Name" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" oninput="calcAll()">
-    <datalist id="pokemon-list"></datalist>
+    <div class="pokemon-combobox">
+      <input id="name" type="text" role="combobox" aria-label="Pokémon Name" aria-autocomplete="list" aria-expanded="false" aria-controls="pokemon-suggestions" placeholder="Pokémon Name" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" oninput="calcAll()">
+      <div id="pokemon-suggestions" class="pokemon-suggestions" role="listbox" aria-label="Pokémon suggestions" hidden></div>
+    </div>
     
     <!-- CP Field with Custom Stepper Buttons -->
     <div class="cp-wrapper">
