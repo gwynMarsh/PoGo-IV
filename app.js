@@ -41,19 +41,131 @@ let lowerCaseDb = {};
     window.addEventListener('DOMContentLoaded', function() {
       applyTheme(getSavedTheme() === 'dark' ? 'dark' : 'light');
 
-      const datalist = document.getElementById('pokemon-list');
       if (typeof baseStatsDb !== 'undefined') {
         Object.keys(baseStatsDb).forEach(name => {
-          const option = document.createElement('option');
-          option.value = name;
-          datalist.appendChild(option);
           lowerCaseDb[name.toLowerCase()] = baseStatsDb[name];
         });
       }
+      setupPokemonAutocomplete();
 
       ['atk', 'def', 'hp'].forEach(id => updateVal(id));
       calcAll();
     });
+
+
+    // Custom suggestions replace the browser-styled datalist.
+    function setupPokemonAutocomplete() {
+      const input = document.getElementById('name');
+      const listbox = document.getElementById('pokemon-suggestions');
+      if (!input || !listbox || typeof baseStatsDb === 'undefined') return;
+
+      const names = Object.keys(baseStatsDb);
+      const limit = 8;
+      let matches = [];
+      let activeIndex = -1;
+
+      function close() {
+        listbox.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        input.removeAttribute('aria-activedescendant');
+        activeIndex = -1;
+      }
+
+      function setActive(index) {
+        activeIndex = index;
+        const options = listbox.querySelectorAll('[role="option"]');
+        options.forEach((option, i) => {
+          option.setAttribute('aria-selected', String(i === index));
+        });
+        if (index >= 0 && options[index]) {
+          input.setAttribute('aria-activedescendant', options[index].id);
+          options[index].scrollIntoView({ block: 'nearest' });
+        } else {
+          input.removeAttribute('aria-activedescendant');
+        }
+      }
+
+      function select(name) {
+        input.value = name;
+        close();
+        calcAll();
+        input.focus();
+      }
+
+      function show() {
+        const query = input.value.trim().toLocaleLowerCase();
+        const starts = [];
+        const contains = [];
+        for (const name of names) {
+          const normalized = name.toLocaleLowerCase();
+          if (normalized.startsWith(query)) starts.push(name);
+          else if (query && normalized.includes(query)) contains.push(name);
+        }
+        matches = starts.concat(contains).slice(0, limit);
+        listbox.replaceChildren();
+        activeIndex = -1;
+
+        if (matches.length === 0) {
+          const message = document.createElement('div');
+          message.className = 'pokemon-suggestion-empty';
+          message.textContent = 'No matching Pokémon';
+          listbox.appendChild(message);
+        } else {
+          matches.forEach((name, index) => {
+            const option = document.createElement('div');
+            option.id = 'pokemon-option-' + index;
+            option.className = 'pokemon-suggestion';
+            option.setAttribute('role', 'option');
+            option.setAttribute('aria-selected', 'false');
+            option.textContent = name;
+            option.addEventListener('mousedown', event => event.preventDefault());
+            option.addEventListener('click', () => select(name));
+            listbox.appendChild(option);
+          });
+        }
+        listbox.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+      }
+
+      input.addEventListener('focus', show);
+      input.addEventListener('input', show);
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          if (!listbox.hidden) {
+            event.preventDefault();
+            close();
+          }
+          return;
+        }
+        if (event.key === 'Tab') {
+          close();
+          return;
+        }
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (listbox.hidden) show();
+          if (!matches.length) return;
+          const delta = event.key === 'ArrowDown' ? 1 : -1;
+          const next = activeIndex < 0
+            ? (delta === 1 ? 0 : matches.length - 1)
+            : (activeIndex + delta + matches.length) % matches.length;
+          setActive(next);
+        } else if (event.key === 'Enter' && !listbox.hidden && activeIndex >= 0) {
+          event.preventDefault();
+          select(matches[activeIndex]);
+        }
+      });
+
+      document.addEventListener('pointerdown', event => {
+        if (!input.parentElement.contains(event.target)) close();
+      });
+      input.addEventListener('blur', () => {
+        // Delay closing until a clicked suggestion has received its click.
+        setTimeout(() => {
+          if (document.activeElement !== input) close();
+        }, 120);
+      });
+    }
 
     function updateDigitRoll(containerId, newValue, height) {
       const container = document.getElementById(containerId);
