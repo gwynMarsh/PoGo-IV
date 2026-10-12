@@ -80,26 +80,39 @@
   </div>
 
   <div class="result-container">
-    <!-- Fixed Pinned Header Row -->
-   <div class="result-header-row">
-
-  <div class="result-level-group">
-    <div id="result-main" class="result-main">
-      Level ?
+    <!-- Level gauge: its fill represents level 1–50, not a linear CP scale. -->
+    <section class="level-display" aria-label="Estimated Pokémon level">
+      <div class="level-title">POKÉMON LEVEL</div>
+      <div class="level-gauge">
+        <svg class="level-gauge-svg" viewBox="0 0 320 162" aria-hidden="true">
+          <path d="M 40 142 A 120 120 0 0 1 280 142" class="level-gauge-track"/>
+          <path id="level-arc" d="M 40 142 A 120 120 0 0 1 280 142" class="level-gauge-fill"
+            pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+        </svg>
+        <div class="level-gauge-center">
+          <div id="result-level-type" class="level-type">ESTIMATED LEVEL</div>
+          <div id="result-main" class="result-main">?</div>
+        </div>
+      </div>
+      <div class="level-cp-scale">
+        <div class="level-cp-end">
+          <span>MIN CP</span>
+          <strong id="level-min-cp">—</strong>
+        </div>
+        <div class="level-cp-end level-cp-end-max">
+          <span>MAX CP · LV. 50</span>
+          <strong id="level-max-cp">—</strong>
+        </div>
+      </div>
+      <div id="result-cp" class="result-cp" aria-live="polite">Enter a Pokémon and CP</div>
+    </section>
+    <div class="result-badge-row" aria-label="Pokémon appraisal">
+      <div class="result-badge-group">
+        <span id="result-stars" class="result-stars">—</span>
+        <span id="result-sub" class="result-sub">—</span>
+      </div>
     </div>
 
-    <div id="result-cp" class="result-cp">
-      Enter a Pokémon and CP
-    </div>
-  </div>
-
-  <div class="result-badge-group">
-    <span id="result-stars" class="result-stars">—</span>
-    <span id="result-sub" class="result-sub">—</span>
-  </div>
-
-</div>
-    
     <div class="result-stats"> 
       <div class="stat-col">
         <div class="gauge-box">
