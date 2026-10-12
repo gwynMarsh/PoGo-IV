@@ -7,7 +7,7 @@
   --track-color: #d1d1d6;
   --mark-color: #aaa;
   --mark-accent: #555;
-  --val-color: #DE7E00; 
+  --val-color: #e33a47; 
   --result-bg: #242424; 
   --result-border: transparent;
   --result-shadow: rgba(0, 0, 0, 0.25);
@@ -22,7 +22,7 @@ body.dark-mode {
   --track-color: #4b5563;
   --mark-color: #555;
   --mark-accent: #aaa;
-  --val-color: #FF9D2E; 
+  --val-color: #ff5b65; 
   --result-bg: #000000; 
   --result-border: 1px solid #2d2d2d;
   --result-shadow: rgba(0, 0, 0, 0.6); 
@@ -227,8 +227,8 @@ input[type=range]::-moz-range-thumb {
 input[type=range]:hover::-webkit-slider-thumb,
 input[type=range]:active::-webkit-slider-thumb,
 input[type=range]::-webkit-slider-thumb:active {
-  background-color: #facc15 !important;
-  border-color: #ca8a04 !important;
+  background-color: var(--val-color) !important;
+  border-color: var(--val-color) !important;
   transform: scale(1.08);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
@@ -237,8 +237,8 @@ input[type=range]::-webkit-slider-thumb:active {
 input[type=range]:hover::-moz-range-thumb,
 input[type=range]:active::-moz-range-thumb,
 input[type=range]::-moz-range-thumb:active {
-  background-color: #facc15 !important;
-  border-color: #ca8a04 !important;
+  background-color: var(--val-color) !important;
+  border-color: var(--val-color) !important;
   transform: scale(1.08);
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
@@ -535,4 +535,111 @@ button:focus-visible {
   .pokemon-suggestion-empty {
     padding: 13px 14px;
   }
+}
+
+/* Level appraisal redesign: Poké Ball-inspired red accent */
+.level-display {
+  text-align: center;
+}
+.level-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #bcbcbc;
+}
+.level-gauge {
+  position: relative;
+  max-width: 320px;
+  margin: 5px auto 0;
+}
+.level-gauge-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.level-gauge-track,
+.level-gauge-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+.level-gauge-track {
+  stroke: rgba(255, 255, 255, 0.16);
+}
+.level-gauge-fill {
+  stroke: var(--val-color);
+  transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
+}
+.level-gauge-center {
+  position: absolute;
+  inset: 34% 0 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.level-type {
+  font-size: 11px;
+  color: #bcbcbc;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.level-display .result-main {
+  color: #ffffff;
+  font-size: clamp(32px, 10vw, 44px);
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  white-space: nowrap;
+}
+.level-cp-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -1px 3px 0;
+}
+.level-cp-end {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  font-variant-numeric: tabular-nums;
+}
+.level-cp-end span {
+  font-size: 10px;
+  color: #a7a7a7;
+  letter-spacing: 0.05em;
+}
+.level-cp-end strong {
+  font-size: 14px;
+  color: #ffffff;
+}
+.level-cp-end-max {
+  align-items: flex-end;
+  text-align: right;
+}
+.level-display .result-cp {
+  margin-top: 11px;
+  font-size: 12px;
+  text-align: center;
+  color: #bcbcbc;
+}
+.result-badge-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.result-badge-row .result-badge-group {
+  margin: 0;
+}
+.result-stats {
+  margin-top: 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .level-gauge-fill { transition: none; }
 }
