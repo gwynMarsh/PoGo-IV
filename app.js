@@ -232,14 +232,15 @@ let lowerCaseDb = {};
         const arc = document.getElementById(id + '-arc');
         if (arc) arc.style.strokeDashoffset = maxArcLength;
       });
+      document.getElementById('level-arc').style.strokeDashoffset = '100';
     }
 
     function showInvalidResult(message) {
-      document.getElementById('result-main').innerText = 'Level ?';
-      document.getElementById('result-stars').innerText = '—';
-    document.getElementById('result-cp').innerText = message;
-    document.getElementById('result-sub').innerText = '—';
-      document.getElementById('result-sub').innerText = message;
+      document.getElementById('result-main').textContent = '?';
+      document.getElementById('result-level-type').textContent = 'ESTIMATED LEVEL';
+      document.getElementById('result-stars').textContent = '—';
+      document.getElementById('result-sub').textContent = '—';
+      document.getElementById('result-cp').textContent = message;
       resetGauges();
     }
 
@@ -275,6 +276,8 @@ function calcAll() {
 
       const base = lowerCaseDb[nameInput];
       if (!nameInput || !base) {
+        document.getElementById('level-min-cp').textContent = '—';
+        document.getElementById('level-max-cp').textContent = '—';
         cpInput.removeAttribute('max');
         showInvalidResult('Enter a Pokémon name');
         return;
@@ -304,6 +307,10 @@ function calcAll() {
       const maxCP50 = calculateCP(base, atkIV, defIV, hpIV, (level50 || maxLevel).cpm);
       const maxCP51 = calculateCP(base, atkIV, defIV, hpIV, maxLevel.cpm);
       const maxCP = maxCP51;
+      const level1 = levels.find(item => item.level === 1) || levels[0];
+      document.getElementById('level-min-cp').textContent =
+        calculateCP(base, atkIV, defIV, hpIV, level1.cpm).toLocaleString();
+      document.getElementById('level-max-cp').textContent = maxCP50.toLocaleString();
       cpInput.min = '10';
       cpInput.max = String(maxCP);
       cpInput.step = '1';
@@ -354,15 +361,18 @@ const isExactMatch = estimatedCP === cp;
       const calculatedDef = Number((totalDef * selectedCPM).toFixed(1));
       const calculatedHp = Math.max(10, Math.floor(totalSta * selectedCPM));
 
-     resMain.innerText = (isExactMatch ? 'Level ' : 'Est. Level ') + bestMatch.level;
-resStars.innerText = starsDisplay;
+      resMain.textContent = String(bestMatch.level);
+      document.getElementById('result-level-type').textContent =
+        isExactMatch ? 'LEVEL' : 'ESTIMATED LEVEL';
+      resStars.textContent = starsDisplay;
+      resSub.textContent = ivString;
+      document.getElementById('result-cp').textContent =
+        isExactMatch ? 'Exact CP match' : 'Closest CP: ' + estimatedCP.toLocaleString();
 
-resSub.innerText = ivString;
-
-document.getElementById('result-cp').innerText =
-  isExactMatch
-    ? 'Exact CP match'
-    : 'Closest CP: ' + estimatedCP;
+      // The gauge covers ordinary levels 1–50; Best Buddy 51 fills it fully.
+      const levelRatio = Math.max(0, Math.min(1, (bestMatch.level - 1) / 49));
+      document.getElementById('level-arc').style.strokeDashoffset =
+        String(100 * (1 - levelRatio));
 
       updateDigitRoll('atk-gauge-roller', calculatedAtk, 15);
       updateDigitRoll('def-gauge-roller', calculatedDef, 15);
