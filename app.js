@@ -255,7 +255,8 @@ let lowerCaseDb = {};
       const defIV = Number(document.getElementById('def').value);
       const hpIV = Number(document.getElementById('hp').value);
       const ivSum = atkIV + defIV + hpIV;
-      const ivPercent = ((ivSum / 45) * 100).toFixed(2);
+      const ivPercent = ((ivSum / 45) * 100).toFixed(1);
+      const ivString = (ivSum === 45 ? '100' : ivPercent) + '% IV';
       const ivString = ivPercent + '% IV';
       const maxArcLength = 47.12;
 
