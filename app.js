@@ -243,23 +243,23 @@ let lowerCaseDb = {};
       resetGauges();
     }
 
-    function calcAll() {
-        const resMain = document.getElementById('result-main');
-        const resStars = document.getElementById('result-stars');
-        const resSub = document.getElementById('result-sub');
-        const nameInput = document.getElementById('name').value.trim().toLowerCase();
-        const cpInput = document.getElementById('cp');
-        const cpRaw = cpInput.value.trim();
-        const cp = Number(cpRaw);
-        const atkIV = Number(document.getElementById('atk').value);
-        const defIV = Number(document.getElementById('def').value);
-        const hpIV = Number(document.getElementById('hp').value);
-        const ivSum = atkIV + defIV + hpIV;
+function calcAll() {
+  const resMain = document.getElementById('result-main');
+  const resStars = document.getElementById('result-stars');
+  const resSub = document.getElementById('result-sub');
+  const nameInput = document.getElementById('name').value.trim().toLowerCase();
+  const cpInput = document.getElementById('cp');
+  const cpRaw = cpInput.value.trim();
+  const cp = Number(cpRaw);
+  const atkIV = Number(document.getElementById('atk').value);
+  const defIV = Number(document.getElementById('def').value);
+  const hpIV = Number(document.getElementById('hp').value);
+  const ivSum = atkIV + defIV + hpIV;
 
-        const ivPercent = ((ivSum / 45) * 100).toFixed(1);
-        const ivString = (ivSum === 45 ? '100' : ivPercent) + '% IV';
+  const ivPercent = ((ivSum / 45) * 100).toFixed(1);
+  const ivString = (ivSum === 45 ? '100' : ivPercent) + '% IV';
 
-        const maxArcLength = 47.12;
+  const maxArcLength = 47.12;
 
       let starsDisplay = '—';
       if (ivSum === 45) starsDisplay = '★★★★';
