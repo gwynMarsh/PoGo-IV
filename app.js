@@ -315,12 +315,6 @@ function calcAll() {
       cpInput.max = String(maxCP);
       cpInput.step = '1';
 
-      const cpHint = document.getElementById('cp-hint');
-      if (cpHint) {
-        cpHint.textContent = 'Max CP: ' + maxCP50 + ' at Lv. 50 · ' +
-          maxCP51 + ' with Best Buddy (Lv. 51)';
-      }
-
       if (cpRaw === '') {
         showInvalidResult('Enter CP · Max at Lv. 50: ' + maxCP50);
         return;
