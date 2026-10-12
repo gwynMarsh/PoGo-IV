@@ -119,6 +119,7 @@ input[type="number"] {
   user-select: none;
   -webkit-user-select: none;
   transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+  touch-action: manipulation;
 }
 
 .cp-btn:active {
