@@ -778,7 +778,7 @@ input[type=range].iv-ruler-source {
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  touch-action: pan-x pan-y;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -831,9 +831,11 @@ input[type=range].iv-ruler-source {
   background: var(--mark-accent);
 }
 
-.iv-ruler-tick.selected .iv-ruler-tick-mark,
-.iv-ruler-tick.selected .iv-ruler-tick-label {
+.iv-ruler-tick.selected .iv-ruler-tick-mark {
   background: var(--slider-accent);
+}
+
+.iv-ruler-tick.selected .iv-ruler-tick-label {
   color: var(--slider-accent);
 }
 
