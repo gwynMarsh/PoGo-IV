@@ -11,6 +11,7 @@
   --result-bg: #242424; 
   --result-border: transparent;
   --result-shadow: rgba(0, 0, 0, 0.25);
+  --slider-accent: #64748B;
 }
 
 body.dark-mode {
@@ -26,6 +27,7 @@ body.dark-mode {
   --result-bg: #000000; 
   --result-border: 1px solid #2d2d2d;
   --result-shadow: rgba(0, 0, 0, 0.6); 
+  --slider-accent: #C1C4CB;
 }
   
 body { 
@@ -154,7 +156,7 @@ input[type="number"] {
 
 .slider-header .digit-roller {
   height: 20px;
-  color: var(--val-color);
+  color: var(--slider-accent);
   font-size: 18px;
 }
 
@@ -182,7 +184,7 @@ input[type=range] {
   margin: 0; 
   appearance: none; 
   -webkit-appearance: none; 
-  background: linear-gradient(to right, var(--val-color) var(--percent, 100%), var(--track-color) var(--percent, 100%)); 
+  background: linear-gradient(to right, var(--slider-accent) var(--percent, 100%), var(--track-color) var(--percent, 100%)); 
   height: 6px;
   border-radius: 3px;
   outline: none; 
