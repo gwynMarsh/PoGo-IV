@@ -703,3 +703,167 @@ button:focus-visible {
     padding-right: 40px;
   }
 }
+
+
+/* Experimental Attack IV ruler: 30px per value, neutral-silver accent */
+.attack-ruler-wrapper {
+  min-width: 0;
+}
+
+.ruler-experiment-label {
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: 1px;
+  font-size: 9px;
+  letter-spacing: .06em;
+  font-weight: 700;
+  color: var(--slider-accent);
+}
+
+.attack-ruler-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ruler-step-btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--input-border);
+  border-radius: 9px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font: inherit;
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.ruler-step-btn:active {
+  background: var(--track-color);
+}
+
+input[type=range].iv-ruler-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.iv-ruler-shell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.iv-ruler {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  padding-inline: calc(50% - 15px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
+}
+
+.iv-ruler:active {
+  cursor: grabbing;
+}
+
+.iv-ruler::-webkit-scrollbar {
+  display: none;
+}
+
+.iv-ruler-tick {
+  display: flex;
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 72px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 7px;
+  scroll-snap-align: center;
+  color: var(--slider-text);
+  cursor: pointer;
+}
+
+.iv-ruler-tick-label {
+  display: block;
+  min-height: 17px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+}
+
+.iv-ruler-tick-mark {
+  display: block;
+  width: 2px;
+  height: 25px;
+  margin-bottom: 7px;
+  background: var(--mark-color);
+  border-radius: 2px;
+}
+
+.iv-ruler-tick.major .iv-ruler-tick-mark {
+  height: 36px;
+  background: var(--mark-accent);
+}
+
+.iv-ruler-tick.selected .iv-ruler-tick-mark,
+.iv-ruler-tick.selected .iv-ruler-tick-label {
+  background: var(--slider-accent);
+  color: var(--slider-accent);
+}
+
+.iv-ruler-pointer {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid var(--slider-accent);
+  pointer-events: none;
+}
+
+.iv-ruler-hint {
+  margin-top: 2px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--slider-text);
+}
+
+.iv-ruler:focus-visible,
+.ruler-step-btn:focus-visible {
+  outline: 3px solid var(--slider-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iv-ruler { scroll-behavior: auto; }
+}
