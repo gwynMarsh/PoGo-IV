@@ -39,20 +39,27 @@
       <button class="cp-btn" type="button" onclick="changeCP(1)">+</button>
     </div>
     
-    <!-- Attack Slider -->
-    <div class="slider-wrapper">
+    <!-- Experimental Attack IV ruler. Defense and HP remain traditional sliders. -->
+    <div class="slider-wrapper attack-ruler-wrapper">
       <div class="slider-header">
-        <span>Attack</span>
-        <div class="digit-roller" id="atk-val-roller"></div>
+        <span>Attack <span class="ruler-experiment-label">RULER EXPERIMENT</span></span>
+        <div class="attack-ruler-actions">
+          <button class="ruler-step-btn" type="button" data-ruler-step="-1" aria-label="Decrease Attack IV by one">−</button>
+          <div class="digit-roller" id="atk-val-roller" aria-hidden="true"></div>
+          <button class="ruler-step-btn" type="button" data-ruler-step="1" aria-label="Increase Attack IV by one">+</button>
+        </div>
       </div>
-      <div class="slider-container-inner">
-        <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="atk" class="slider" aria-label="Attack IV" min="0" max="15" step="1" value="15" oninput="updateVal('atk'); calcAll()">
-        <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <input type="range" id="atk" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
+      <div class="iv-ruler-shell">
+        <div id="atk-ruler" class="iv-ruler" role="slider" tabindex="0" aria-label="Attack IV"
+          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15">
+        </div>
+        <div class="iv-ruler-pointer" aria-hidden="true"></div>
       </div>
+      <div class="iv-ruler-hint">Swipe, tap a mark, or use − / + to choose 0–15</div>
     </div>
 
-    <!-- Defense Slider -->
+        <!-- Defense Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
         <span>Defense</span>
