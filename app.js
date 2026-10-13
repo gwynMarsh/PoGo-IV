@@ -49,9 +49,135 @@ let lowerCaseDb = {};
       setupPokemonAutocomplete();
 
       ['atk', 'def', 'hp'].forEach(id => updateVal(id));
+      setupAttackRuler();
       calcAll();
     });
 
+
+    // Experimental 0–15 ruler. The existing #atk input remains the
+    // single source of truth for the unchanged IV and CP calculations.
+    function setupAttackRuler() {
+      const input = document.getElementById('atk');
+      const ruler = document.getElementById('atk-ruler');
+      const wrapper = document.querySelector('.attack-ruler-wrapper');
+      if (!input || !ruler || !wrapper) return;
+
+      const MIN = 0;
+      const MAX = 15;
+      const SPACING = 30; // pixels between discrete IV values
+
+      const clampIV = value => Math.max(MIN, Math.min(MAX, Math.round(value)));
+      const ticks = [];
+
+      for (let iv = MIN; iv <= MAX; iv++) {
+        const tick = document.createElement('div');
+        tick.className = 'iv-ruler-tick';
+        tick.dataset.iv = String(iv);
+        tick.setAttribute('aria-hidden', 'true');
+        if (iv % 5 === 0 || iv === MAX) tick.classList.add('major');
+        const label = document.createElement('span');
+        label.className = 'iv-ruler-tick-label';
+        label.textContent = iv % 5 === 0 || iv === MAX ? String(iv) : '';
+        const mark = document.createElement('span');
+        mark.className = 'iv-ruler-tick-mark';
+        tick.append(label, mark);
+        tick.addEventListener('click', () => setIV(iv, true));
+        ruler.appendChild(tick);
+        ticks.push(tick);
+      }
+
+      function setIV(value, reposition) {
+        const iv = clampIV(value);
+        if (Number(input.value) !== iv) {
+          input.value = String(iv);
+          updateVal('atk');
+          calcAll();
+        }
+        ruler.setAttribute('aria-valuenow', String(iv));
+        ruler.setAttribute('aria-valuetext', iv + ' of 15');
+        for (let i = MIN; i <= MAX; i++) {
+          ticks[i].classList.toggle('selected', i === iv);
+        }
+        if (reposition) ruler.scrollLeft = iv * SPACING;
+      }
+
+      // Native touch scrolling provides inertia; snap points settle on integers.
+      // Only calculate when the rounded value actually changes.
+      ruler.addEventListener('scroll', () => {
+        setIV(ruler.scrollLeft / SPACING, false);
+      }, { passive: true });
+
+      ruler.addEventListener('keydown', event => {
+        let next;
+        const current = Number(input.value);
+        switch (event.key) {
+          case 'ArrowRight':
+          case 'ArrowUp': next = current + 1; break;
+          case 'ArrowLeft':
+          case 'ArrowDown': next = current - 1; break;
+          case 'Home': next = MIN; break;
+          case 'End': next = MAX; break;
+          case 'PageUp': next = current + 5; break;
+          case 'PageDown': next = current - 5; break;
+          default: return;
+        }
+        event.preventDefault();
+        setIV(next, true);
+      });
+
+      wrapper.querySelectorAll('[data-ruler-step]').forEach(button => {
+        button.addEventListener('click', () => {
+          setIV(Number(input.value) + Number(button.dataset.rulerStep), true);
+        });
+      });
+
+      // Mouse users can drag the ruler just like touch users swipe it.
+      // A regular click on a visible tick remains an exact selection.
+      let drag = null;
+      ruler.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        drag = { x: event.clientX, left: ruler.scrollLeft, moved: false };
+      });
+      ruler.addEventListener('pointermove', event => {
+        if (!drag || (event.buttons & 1) === 0) return;
+        const delta = event.clientX - drag.x;
+        if (!drag.moved && Math.abs(delta) > 5) {
+          drag.moved = true;
+          ruler.style.scrollSnapType = 'none';
+          ruler.setPointerCapture(event.pointerId);
+        }
+        if (drag.moved) ruler.scrollLeft = drag.left - delta;
+      });
+      function stopDragging(event) {
+        if (!drag) return;
+        const wasDragging = drag.moved;
+        drag = null;
+        ruler.style.scrollSnapType = '';
+        if (wasDragging) {
+          ruler.dataset.justDragged = 'true';
+          if (ruler.hasPointerCapture(event.pointerId)) {
+            ruler.releasePointerCapture(event.pointerId);
+          }
+          setIV(ruler.scrollLeft / SPACING, true);
+        }
+      }
+      ruler.addEventListener('pointerup', stopDragging);
+      ruler.addEventListener('pointercancel', stopDragging);
+      // A drag should not also activate a tick click.
+      ruler.addEventListener('click', event => {
+        if (ruler.dataset.justDragged === 'true') {
+          event.stopPropagation();
+          ruler.dataset.justDragged = '';
+        }
+      }, true);
+
+      // Account for viewport changes without changing the selected IV.
+      window.addEventListener('resize', () => {
+        ruler.scrollLeft = Number(input.value) * SPACING;
+      });
+
+      setIV(Number(input.value), true);
+    }
 
     // Custom suggestions replace the browser-styled datalist.
     function setupPokemonAutocomplete() {
