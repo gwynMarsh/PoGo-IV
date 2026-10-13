@@ -644,3 +644,60 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .level-gauge-fill { transition: none; }
 }
+
+/* Desktop and tablet responsive layout.
+   Mobile retains the original single-column presentation. */
+.app-layout {
+  display: block;
+  min-width: 0;
+}
+
+@media (min-width: 800px) {
+  body {
+    box-sizing: border-box;
+    max-width: 1024px;
+    padding: 36px 28px 24px;
+  }
+
+  .header-row {
+    margin-bottom: 28px;
+  }
+
+  .app-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(24px, 4vw, 48px);
+  }
+
+  .app-layout > .input-group,
+  .app-layout > .result-container {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .app-layout > .input-group {
+    margin-bottom: 0;
+  }
+
+  .app-layout > .result-container {
+    margin-top: 0;
+  }
+
+  .level-gauge {
+    max-width: 360px;
+  }
+
+  .app-footer {
+    margin-top: 32px;
+  }
+}
+
+@media (min-width: 1100px) {
+  body {
+    max-width: 1100px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
