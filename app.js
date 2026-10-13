@@ -236,10 +236,10 @@ let lowerCaseDb = {};
     }
 
     function showInvalidResult(message) {
-      document.getElementById('result-main').textContent = '?';
+      document.getElementById('result-main').textContent = '???';
       document.getElementById('result-level-type').textContent = 'ESTIMATED LEVEL';
-      document.getElementById('result-stars').textContent = '—';
-      document.getElementById('result-sub').textContent = '—';
+      document.getElementById('result-stars').textContent = '---';
+      document.getElementById('result-sub').textContent = '---';
       document.getElementById('result-cp').textContent = message;
       resetGauges();
     }
@@ -262,7 +262,7 @@ function calcAll() {
 
   const maxArcLength = 47.12;
 
-      let starsDisplay = '—';
+      let starsDisplay = '-';
       if (ivSum === 45) starsDisplay = '★★★★';
       else if (ivSum >= 37) starsDisplay = '★★★';
       else if (ivSum >= 30) starsDisplay = '★★';
