@@ -49,17 +49,21 @@ let lowerCaseDb = {};
       setupPokemonAutocomplete();
 
       ['atk', 'def', 'hp'].forEach(id => updateVal(id));
-      setupAttackRuler();
+      setupIVRulers();
       calcAll();
     });
 
 
-    // Experimental 0–15 ruler. The existing #atk input remains the
-    // single source of truth for the unchanged IV and CP calculations.
-    function setupAttackRuler() {
-      const input = document.getElementById('atk');
-      const ruler = document.getElementById('atk-ruler');
-      const wrapper = document.querySelector('.attack-ruler-wrapper');
+    // All three rulers share the same touch, mouse and keyboard controls.
+    // Their hidden input elements remain the IV values read by calcAll().
+    function setupIVRulers() {
+      ['atk', 'def', 'hp'].forEach(setupIVRuler);
+    }
+
+    function setupIVRuler(id) {
+      const input = document.getElementById(id);
+      const ruler = document.getElementById(id + '-ruler');
+      const wrapper = input && input.closest('.iv-ruler-wrapper');
       if (!input || !ruler || !wrapper) return;
 
       const MIN = 0;
@@ -88,7 +92,7 @@ let lowerCaseDb = {};
 
       // Only deliberate tap/keyboard selection animates the header number.
       // During a swipe, the number updates instantly to stay in sync with the ruler.
-      const valueDisplay = document.getElementById('atk-val-roller');
+      const valueDisplay = document.getElementById(id + '-val-roller');
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       function animateValue(from, to) {
         if (!valueDisplay || !valueDisplay.animate || prefersReducedMotion.matches) return;
@@ -109,7 +113,7 @@ let lowerCaseDb = {};
 
         if (previous !== iv) {
           input.value = String(iv);
-          updateVal('atk');
+          updateVal(id);
           calcAll();
           if (reposition) animateValue(previous, iv);
         }
@@ -315,66 +319,12 @@ let lowerCaseDb = {};
       });
     }
 
-    function updateDigitRoll(containerId, newValue, height) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-
-      const currentValStr = container.dataset.val || '';
-      const newValStr = String(newValue);
-      if (currentValStr === newValStr) return;
-
-      if (currentValStr.length !== newValStr.length) {
-        container.innerHTML = '';
-        for (const char of newValStr) {
-          const col = document.createElement('div');
-          col.className = 'digit-col';
-          col.style.height = height + 'px';
-          const strip = document.createElement('div');
-          strip.className = 'digit-strip';
-          const face = document.createElement('div');
-          face.style.height = height + 'px';
-          face.textContent = char;
-          strip.appendChild(face);
-          col.appendChild(strip);
-          container.appendChild(col);
-        }
-      } else {
-        const strips = container.querySelectorAll('.digit-strip');
-        for (let i = 0; i < newValStr.length; i++) {
-          if (currentValStr[i] !== newValStr[i]) {
-            const strip = strips[i];
-            if (!strip) continue;
-            strip.style.transition = 'none';
-            strip.style.transform = 'translateY(0)';
-            strip.replaceChildren();
-            for (const char of [currentValStr[i], newValStr[i]]) {
-              const face = document.createElement('div');
-              face.style.height = height + 'px';
-              face.textContent = char;
-              strip.appendChild(face);
-            }
-            void strip.offsetHeight;
-            strip.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.35, 1)';
-            strip.style.transform = 'translateY(-' + height + 'px)';
-          }
-        }
-      }
-      container.dataset.val = newValStr;
-    }
-
     function updateVal(id) {
-      const slider = document.getElementById(id);
-      if (!slider) return;
-      const val = Number(slider.value);
-      const min = Number(slider.min) || 0;
-      const max = Number(slider.max) || 15;
-      const percent = ((val - min) / (max - min)) * 100;
-      slider.style.setProperty('--percent', percent + '%');
-      if (id === 'atk') {
-        // Attack ruler updates immediately, even during fast flicks.
-        document.getElementById('atk-val-roller').textContent = String(val);
-      } else {
-        updateDigitRoll(id + '-val-roller', val, 20);
+      const input = document.getElementById(id);
+      const valueDisplay = document.getElementById(id + '-val-roller');
+      if (input && valueDisplay) {
+        // All three ruler values update immediately as the user scrolls.
+        valueDisplay.textContent = input.value;
       }
     }
 
