@@ -23,8 +23,8 @@
 body.dark-mode {
   --bg-color: #121212;
   --text-color: #f3f4f6;
-  --input-bg: #1f2937;
-  --input-border: #374151;
+  --input-bg: #2B2E33;
+  --input-border: #454A51;
   --slider-text: #d1d5db;
   --track-color: #4b5563;
   --mark-color: #555;
@@ -936,4 +936,24 @@ input[type=range].iv-ruler-source {
   .iv-ruler { scroll-behavior: auto; }
   .iv-ruler-tick-mark,
   .iv-ruler-tick-label { transition: none; }
+}
+
+/* DARK THEME — Neutral Graphite Inputs */
+
+body.dark-mode #name::placeholder,
+body.dark-mode #cp::placeholder {
+  color: #A9AEB5;
+  opacity: 1;
+}
+
+/* Autocomplete list */
+body.dark-mode .pokemon-suggestions {
+  background: #2B2E33;
+  color: #F2F4F7;
+}
+
+/* Hovered and keyboard-selected suggestions */
+body.dark-mode .pokemon-suggestion:hover,
+body.dark-mode .pokemon-suggestion[aria-selected="true"] {
+  background: #3B4048;
 }
