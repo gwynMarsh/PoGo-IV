@@ -90,8 +90,6 @@ let lowerCaseDb = {};
       // During a swipe, the number updates instantly to stay in sync with the ruler.
       const valueDisplay = document.getElementById('atk-val-roller');
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      let lastFlashedIV = Number(input.value);
-
       function animateValue(from, to) {
         if (!valueDisplay || !valueDisplay.animate || prefersReducedMotion.matches) return;
         valueDisplay.getAnimations().forEach(animation => animation.cancel());
@@ -101,35 +99,29 @@ let lowerCaseDb = {};
         ], { duration: 140, easing: 'ease-out' });
       }
 
-      function flashSelected(iv) {
-        if (prefersReducedMotion.matches) return;
-        ticks.forEach(tick => tick.classList.remove('flash'));
-        // Restart the small highlight only on settled or explicit selections.
-        void ticks[iv].offsetWidth;
-        ticks[iv].classList.add('flash');
-      }
-
+      // Only the newly selected and previous ticks change color.
+      // A short CSS transition replaces the old flashing/reflow effect.
+      let selectedIV = -1;
       function setIV(value, reposition) {
         const iv = clampIV(value);
         const previous = Number(input.value);
+        if (previous === iv && selectedIV === iv && !reposition) return;
+
         if (previous !== iv) {
           input.value = String(iv);
           updateVal('atk');
           calcAll();
           if (reposition) animateValue(previous, iv);
         }
+
         ruler.setAttribute('aria-valuenow', String(iv));
         ruler.setAttribute('aria-valuetext', iv + ' of 15');
-        for (let i = MIN; i <= MAX; i++) {
-          ticks[i].classList.toggle('selected', i === iv);
+        if (selectedIV !== iv) {
+          if (selectedIV >= 0) ticks[selectedIV].classList.remove('selected');
+          ticks[iv].classList.add('selected');
+          selectedIV = iv;
         }
-        if (reposition) {
-          ruler.scrollLeft = iv * SPACING;
-          if (previous !== iv) {
-            lastFlashedIV = iv;
-            flashSelected(iv);
-          }
-        }
+        if (reposition) ruler.scrollLeft = iv * SPACING;
       }
 
       // Native touch scrolling provides inertia; snap points settle on integers.
@@ -138,14 +130,9 @@ let lowerCaseDb = {};
         setIV(ruler.scrollLeft / SPACING, false);
       }, { passive: true });
 
-      // On compatible browsers, flash only once after scrolling settles.
+      // Reconcile the value after momentum scrolling and CSS snap finish.
       ruler.addEventListener('scrollend', () => {
-        const iv = clampIV(ruler.scrollLeft / SPACING);
-        setIV(iv, false);
-        if (iv !== lastFlashedIV) {
-          lastFlashedIV = iv;
-          flashSelected(iv);
-        }
+        setIV(ruler.scrollLeft / SPACING, false);
       });
 
       ruler.addEventListener('keydown', event => {
