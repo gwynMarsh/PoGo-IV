@@ -86,19 +86,50 @@ let lowerCaseDb = {};
         ticks.push(tick);
       }
 
+      // Only deliberate tap/keyboard selection animates the header number.
+      // During a swipe, the number updates instantly to stay in sync with the ruler.
+      const valueDisplay = document.getElementById('atk-val-roller');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let lastFlashedIV = Number(input.value);
+
+      function animateValue(from, to) {
+        if (!valueDisplay || !valueDisplay.animate || prefersReducedMotion.matches) return;
+        valueDisplay.getAnimations().forEach(animation => animation.cancel());
+        valueDisplay.animate([
+          { transform: 'translateX(' + (to > from ? '10px' : '-10px') + ')', opacity: 0.65 },
+          { transform: 'translateX(0)', opacity: 1 }
+        ], { duration: 140, easing: 'ease-out' });
+      }
+
+      function flashSelected(iv) {
+        if (prefersReducedMotion.matches) return;
+        ticks.forEach(tick => tick.classList.remove('flash'));
+        // Restart the small highlight only on settled or explicit selections.
+        void ticks[iv].offsetWidth;
+        ticks[iv].classList.add('flash');
+      }
+
       function setIV(value, reposition) {
         const iv = clampIV(value);
-        if (Number(input.value) !== iv) {
+        const previous = Number(input.value);
+        if (previous !== iv) {
           input.value = String(iv);
           updateVal('atk');
           calcAll();
+          if (reposition) animateValue(previous, iv);
         }
         ruler.setAttribute('aria-valuenow', String(iv));
         ruler.setAttribute('aria-valuetext', iv + ' of 15');
         for (let i = MIN; i <= MAX; i++) {
           ticks[i].classList.toggle('selected', i === iv);
         }
-        if (reposition) ruler.scrollLeft = iv * SPACING;
+        if (reposition) {
+          ruler.scrollLeft = iv * SPACING;
+          if (previous !== iv) {
+            lastFlashedIV = iv;
+            flashSelected(iv);
+          }
+        }
       }
 
       // Native touch scrolling provides inertia; snap points settle on integers.
@@ -106,6 +137,16 @@ let lowerCaseDb = {};
       ruler.addEventListener('scroll', () => {
         setIV(ruler.scrollLeft / SPACING, false);
       }, { passive: true });
+
+      // On compatible browsers, flash only once after scrolling settles.
+      ruler.addEventListener('scrollend', () => {
+        const iv = clampIV(ruler.scrollLeft / SPACING);
+        setIV(iv, false);
+        if (iv !== lastFlashedIV) {
+          lastFlashedIV = iv;
+          flashSelected(iv);
+        }
+      });
 
       ruler.addEventListener('keydown', event => {
         let next;
@@ -123,12 +164,6 @@ let lowerCaseDb = {};
         }
         event.preventDefault();
         setIV(next, true);
-      });
-
-      wrapper.querySelectorAll('[data-ruler-step]').forEach(button => {
-        button.addEventListener('click', () => {
-          setIV(Number(input.value) + Number(button.dataset.rulerStep), true);
-        });
       });
 
       // Mouse users can drag the ruler just like touch users swipe it.
@@ -348,13 +383,27 @@ let lowerCaseDb = {};
       const max = Number(slider.max) || 15;
       const percent = ((val - min) / (max - min)) * 100;
       slider.style.setProperty('--percent', percent + '%');
-      updateDigitRoll(id + '-val-roller', val, 20);
+      if (id === 'atk') {
+        // Attack ruler updates immediately, even during fast flicks.
+        document.getElementById('atk-val-roller').textContent = String(val);
+      } else {
+        updateDigitRoll(id + '-val-roller', val, 20);
+      }
+    }
+
+    // Mini gauge numerals are steady readouts, not animated digit rollers.
+    function setGaugeValue(id, value) {
+      const element = document.getElementById(id + '-gauge-roller');
+      if (element) {
+        element.textContent = String(value);
+        element.dataset.val = String(value);
+      }
     }
 
     function resetGauges() {
       const maxArcLength = 47.12;
       ['atk', 'def', 'hp'].forEach(id => {
-        updateDigitRoll(id + '-gauge-roller', '—', 15);
+        setGaugeValue(id, '—');
         const arc = document.getElementById(id + '-arc');
         if (arc) arc.style.strokeDashoffset = maxArcLength;
       });
@@ -494,9 +543,9 @@ const isExactMatch = estimatedCP === cp;
       document.getElementById('level-arc').style.strokeDashoffset =
         String(100 * (1 - levelRatio));
 
-      updateDigitRoll('atk-gauge-roller', calculatedAtk, 15);
-      updateDigitRoll('def-gauge-roller', calculatedDef, 15);
-      updateDigitRoll('hp-gauge-roller', calculatedHp, 15);
+      setGaugeValue('atk', calculatedAtk);
+      setGaugeValue('def', calculatedDef);
+      setGaugeValue('hp', calculatedHp);
 
       const statCap = 350;
       const atkRatio = Math.min(1, calculatedAtk / statCap);
