@@ -16,6 +16,7 @@
   --result-border: transparent;
   --result-shadow: rgba(0, 0, 0, 0.20);
   --slider-accent: #64748B;
+  --ruler-surface: #E9EBEF;
 }
 
 body.dark-mode {
@@ -36,6 +37,7 @@ body.dark-mode {
   --result-border: #363a42;
   --result-shadow: rgba(0, 0, 0, 0.48); 
   --slider-accent: #C1C4CB;
+  --ruler-surface: #24272B;
 }
   
 body { 
@@ -824,6 +826,9 @@ input[type=range].iv-ruler-source {
   position: relative;
   width: 100%;
   min-width: 0;
+  background-color: var(--ruler-surface);
+  border-radius: 12px;
+  /* No border/shadow; keep the touch-scroll area and pointer unchanged. */
 }
 
 .iv-ruler {
