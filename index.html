@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-  <!-- Only the three required Google Material Symbols Outlined glyphs. -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20,400&amp;icon_names=favorite,shield,swords&amp;display=block" rel="stylesheet">
+  <!-- Only the five Material Symbols Outlined glyphs used by the app. -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20,400&amp;icon_names=dark_mode,favorite,light_mode,shield,swords&amp;display=block" rel="stylesheet">
   
   <!-- External CSS Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -24,7 +24,7 @@
 <body>
   <div class="header-row">
     <h2>Pokémon Evaluator</h2>
-    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <button id="theme-btn" class="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to dark theme" title="Switch to dark theme"><span id="theme-icon" class="material-symbols-outlined theme-icon" aria-hidden="true">dark_mode</span></button>
   </div>
   
   <main class="app-layout">
