@@ -7,6 +7,7 @@
   --track-color: #d1d1d6;
   --mark-color: #aaa;
   --mark-accent: #555;
+  --ruler-neutral-color: #aaa; /* All unselected ticks AND number labels */
   --val-color: #e33a47; 
   --atk-accent: #e8770d;
   --def-icon-accent: #087f94;
@@ -26,6 +27,7 @@ body.dark-mode {
   --track-color: #4b5563;
   --mark-color: #555;
   --mark-accent: #aaa;
+  --ruler-neutral-color: #9298a0; /* Keep tiny labels legible on dark surfaces */
   --val-color: #ff5b65; 
   --atk-accent: #ff9e36;
   --def-icon-accent: #4df1ff;
@@ -836,7 +838,7 @@ input[type=range].iv-ruler-source {
   flex-direction: column;
   gap: 5px;
   scroll-snap-align: center;
-  color: var(--slider-text);
+  color: var(--ruler-neutral-color);
   cursor: pointer;
 }
 
@@ -854,14 +856,14 @@ input[type=range].iv-ruler-source {
   width: 2px;
   height: 20px;
   margin-bottom: 5px;
-  background: var(--mark-color);
+  background: var(--ruler-neutral-color);
   border-radius: 2px;
   transition: background-color 180ms ease 35ms;
 }
 
 .iv-ruler-tick.major .iv-ruler-tick-mark {
   height: 28px;
-  background: var(--mark-accent);
+  background: var(--ruler-neutral-color);
 }
 
 .iv-ruler-tick.selected .iv-ruler-tick-mark {
