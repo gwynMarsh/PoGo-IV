@@ -39,8 +39,8 @@
       <button class="cp-btn" type="button" onclick="changeCP(1)">+</button>
     </div>
     
-    <!-- Experimental Attack IV ruler. Defense and HP remain traditional sliders. -->
-    <div class="slider-wrapper attack-ruler-wrapper">
+    <!-- Attack IV ruler (0–15). -->
+    <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
         <span><span class="stat-emoji" aria-hidden="true">⚔️</span>Attack</span>
         <span class="ruler-value" id="atk-val-roller" aria-hidden="true">15</span>
@@ -48,36 +48,36 @@
       <input type="range" id="atk" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
       <div class="iv-ruler-shell">
         <div id="atk-ruler" class="iv-ruler" role="slider" tabindex="0" aria-label="Attack IV"
-          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15">
-        </div>
+          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15"></div>
         <div class="iv-ruler-pointer" aria-hidden="true"></div>
       </div>
-      <div class="iv-ruler-hint">Swipe or tap a tick · Use arrow keys on desktop</div>
     </div>
 
-        <!-- Defense Slider -->
-    <div class="slider-wrapper">
+    <!-- Defense IV ruler (0–15). -->
+    <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
         <span><span class="stat-emoji" aria-hidden="true">🛡️</span>Defense</span>
-        <div class="digit-roller" id="def-val-roller"></div>
+        <span class="ruler-value" id="def-val-roller" aria-hidden="true">15</span>
       </div>
-      <div class="slider-container-inner">
-        <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="def" class="slider" aria-label="Defense IV" min="0" max="15" step="1" value="15" oninput="updateVal('def'); calcAll()">
-        <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <input type="range" id="def" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
+      <div class="iv-ruler-shell">
+        <div id="def-ruler" class="iv-ruler" role="slider" tabindex="0" aria-label="Defense IV"
+          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15"></div>
+        <div class="iv-ruler-pointer" aria-hidden="true"></div>
       </div>
     </div>
 
-    <!-- HP Slider -->
-    <div class="slider-wrapper">
+    <!-- HP IV ruler (0–15). -->
+    <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
         <span><span class="stat-emoji" aria-hidden="true">❤️</span>HP</span>
-        <div class="digit-roller" id="hp-val-roller"></div>
+        <span class="ruler-value" id="hp-val-roller" aria-hidden="true">15</span>
       </div>
-      <div class="slider-container-inner">
-        <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="hp" class="slider" aria-label="HP IV" min="0" max="15" step="1" value="15" oninput="updateVal('hp'); calcAll()">
-        <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <input type="range" id="hp" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
+      <div class="iv-ruler-shell">
+        <div id="hp-ruler" class="iv-ruler" role="slider" tabindex="0" aria-label="HP IV"
+          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15"></div>
+        <div class="iv-ruler-pointer" aria-hidden="true"></div>
       </div>
     </div>
   </div>
