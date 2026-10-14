@@ -710,42 +710,24 @@ button:focus-visible {
   min-width: 0;
 }
 
-.ruler-experiment-label {
+.stat-emoji {
   display: inline-block;
-  margin-left: 6px;
-  vertical-align: 1px;
-  font-size: 9px;
-  letter-spacing: .06em;
-  font-weight: 700;
-  color: var(--slider-accent);
+  margin-right: 6px;
+  font-size: 17px;
+  vertical-align: -2px;
 }
 
-.attack-ruler-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.ruler-step-btn {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 1px solid var(--input-border);
-  border-radius: 9px;
-  background: var(--input-bg);
-  color: var(--text-color);
-  font: inherit;
-  font-size: 19px;
-  line-height: 1;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-.ruler-step-btn:active {
-  background: var(--track-color);
+.ruler-value {
+  display: inline-block;
+  min-width: 2ch;
+  font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--val-color);
+  text-align: right;
+  will-change: auto;
 }
 
 input[type=range].iv-ruler-source {
@@ -824,6 +806,7 @@ input[type=range].iv-ruler-source {
   margin-bottom: 7px;
   background: var(--mark-color);
   border-radius: 2px;
+  transition: background-color 0.16s ease;
 }
 
 .iv-ruler-tick.major .iv-ruler-tick-mark {
@@ -832,11 +815,28 @@ input[type=range].iv-ruler-source {
 }
 
 .iv-ruler-tick.selected .iv-ruler-tick-mark {
-  background: var(--slider-accent);
+  background: var(--val-color);
 }
 
-.iv-ruler-tick.selected .iv-ruler-tick-label {
-  color: var(--slider-accent);
+/* Only numbered major ticks have a highlighted number. */
+.iv-ruler-tick.selected.major .iv-ruler-tick-label {
+  color: var(--val-color);
+}
+
+.iv-ruler-tick.flash .iv-ruler-tick-mark {
+  animation: ruler-mark-flash 0.18s ease-out;
+}
+.iv-ruler-tick.flash.major .iv-ruler-tick-label {
+  animation: ruler-label-flash 0.18s ease-out;
+}
+
+@keyframes ruler-mark-flash {
+  35% { filter: brightness(1.35); box-shadow: 0 0 0 3px rgba(255,91,101,0.14); }
+  100% { filter: brightness(1); box-shadow: none; }
+}
+@keyframes ruler-label-flash {
+  35% { filter: brightness(1.35); }
+  100% { filter: brightness(1); }
 }
 
 .iv-ruler-pointer {
@@ -848,7 +848,9 @@ input[type=range].iv-ruler-source {
   transform: translateX(-50%);
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 12px solid var(--slider-accent);
+  border-bottom: 12px solid var(--val-color);
+  transition: none;
+  animation: none;
   pointer-events: none;
 }
 
@@ -860,12 +862,14 @@ input[type=range].iv-ruler-source {
   color: var(--slider-text);
 }
 
-.iv-ruler:focus-visible,
-.ruler-step-btn:focus-visible {
-  outline: 3px solid var(--slider-accent);
+.iv-ruler:focus-visible {
+  outline: 3px solid var(--val-color);
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .iv-ruler { scroll-behavior: auto; }
+  .iv-ruler-tick.flash .iv-ruler-tick-mark,
+  .iv-ruler-tick.flash.major .iv-ruler-tick-label { animation: none; }
+  .iv-ruler-tick-mark { transition: none; }
 }
