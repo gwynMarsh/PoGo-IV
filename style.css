@@ -713,8 +713,8 @@ button:focus-visible {
 }
 
 
-/* Experimental Attack IV ruler: 30px per value, neutral-silver accent */
-.attack-ruler-wrapper {
+/* Shared compact IV rulers: 30px per value, red selection accent */
+.iv-ruler-wrapper {
   min-width: 0;
 }
 
@@ -845,14 +845,6 @@ input[type=range].iv-ruler-source {
   transition: none;
   animation: none;
   pointer-events: none;
-}
-
-.iv-ruler-hint {
-  margin-top: 0;
-  text-align: center;
-  font-size: 10px;
-  line-height: 1.35;
-  color: var(--slider-text);
 }
 
 .iv-ruler:focus-visible {
