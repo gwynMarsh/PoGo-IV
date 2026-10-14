@@ -17,6 +17,7 @@
   --result-shadow: rgba(0, 0, 0, 0.20);
   --slider-accent: #64748B;
   --ruler-surface: #E9EBEF;
+  --ruler-inner-shadow: inset 0 2px 5px rgba(40, 45, 55, 0.10);
 }
 
 body.dark-mode {
@@ -38,6 +39,7 @@ body.dark-mode {
   --result-shadow: rgba(0, 0, 0, 0.48); 
   --slider-accent: #C1C4CB;
   --ruler-surface: #24272B;
+  --ruler-inner-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.30);
 }
   
 body { 
@@ -828,7 +830,8 @@ input[type=range].iv-ruler-source {
   min-width: 0;
   background-color: var(--ruler-surface);
   border-radius: 12px;
-  /* No border/shadow; keep the touch-scroll area and pointer unchanged. */
+  box-shadow: var(--ruler-inner-shadow);
+  /* Recessed shading stays stationary as the ruler ticks scroll. */
 }
 
 .iv-ruler {
