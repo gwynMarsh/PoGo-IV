@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  <!-- Only the three required Google Material Symbols Outlined glyphs. -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,20,400&amp;icon_names=favorite,shield,swords&amp;display=block" rel="stylesheet">
   
   <!-- External CSS Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -42,7 +44,7 @@
     <!-- Attack IV ruler (0–15). -->
     <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
-        <span><span class="stat-emoji" aria-hidden="true">⚔️</span>Attack</span>
+        <span class="iv-stat-heading"><span class="material-symbols-outlined stat-icon stat-icon-atk" aria-hidden="true">swords</span>Attack</span>
         <span class="ruler-value" id="atk-val-roller" aria-hidden="true">15</span>
       </div>
       <input type="range" id="atk" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
@@ -56,7 +58,7 @@
     <!-- Defense IV ruler (0–15). -->
     <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
-        <span><span class="stat-emoji" aria-hidden="true">🛡️</span>Defense</span>
+        <span class="iv-stat-heading"><span class="material-symbols-outlined stat-icon stat-icon-def" aria-hidden="true">shield</span>Defense</span>
         <span class="ruler-value" id="def-val-roller" aria-hidden="true">15</span>
       </div>
       <input type="range" id="def" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
@@ -70,7 +72,7 @@
     <!-- HP IV ruler (0–15). -->
     <div class="slider-wrapper iv-ruler-wrapper">
       <div class="slider-header">
-        <span><span class="stat-emoji" aria-hidden="true">❤️</span>HP</span>
+        <span class="iv-stat-heading"><span class="material-symbols-outlined stat-icon stat-icon-hp" aria-hidden="true">favorite</span>HP</span>
         <span class="ruler-value" id="hp-val-roller" aria-hidden="true">15</span>
       </div>
       <input type="range" id="hp" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
@@ -121,13 +123,13 @@
         <div class="gauge-box">
           <svg viewBox="0 0 36 21" class="gauge-svg">
             <path d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round"/>
-            <path id="atk-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#FF5252" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.16s ease;"/>
+            <path id="atk-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.16s ease;"/>
           </svg>
           <div class="gauge-val-container">
             <div class="digit-roller" id="atk-gauge-roller"></div>
           </div>
         </div>
-        <div class="stat-label" style="color: #FF5252;">ATK</div>
+        <div class="stat-label stat-label-atk">ATK</div>
       </div>
 
       <div class="stat-col">

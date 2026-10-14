@@ -8,9 +8,12 @@
   --mark-color: #aaa;
   --mark-accent: #555;
   --val-color: #e33a47; 
+  --atk-accent: #e8770d;
+  --def-icon-accent: #087f94;
+  --hp-icon-accent: #328e40;
   --result-bg: #242424; 
   --result-border: transparent;
-  --result-shadow: rgba(0, 0, 0, 0.25);
+  --result-shadow: rgba(0, 0, 0, 0.20);
   --slider-accent: #64748B;
 }
 
@@ -24,9 +27,12 @@ body.dark-mode {
   --mark-color: #555;
   --mark-accent: #aaa;
   --val-color: #ff5b65; 
+  --atk-accent: #ff9e36;
+  --def-icon-accent: #4df1ff;
+  --hp-icon-accent: #5cff40;
   --result-bg: #000000; 
-  --result-border: 1px solid #2d2d2d;
-  --result-shadow: rgba(0, 0, 0, 0.6); 
+  --result-border: #363a42;
+  --result-shadow: rgba(0, 0, 0, 0.48); 
   --slider-accent: #C1C4CB;
 }
   
@@ -286,12 +292,12 @@ input[type=range]::-moz-range-thumb:active {
 /* RESULT CONTAINER & LOCKED HEADER ALIGNMENT */
 .result-container {
   background-color: var(--result-bg) !important;
-  border: var(--result-border);
+  border: 1px solid var(--result-border);
   color: #ffffff;
   border-radius: 20px;
   padding: 18px 16px;
   margin-top: 20px;
-  box-shadow: 0 4px 12px var(--result-shadow);
+  box-shadow: 0 8px 24px var(--result-shadow);
   transition: background-color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -467,7 +473,7 @@ button:focus-visible {
   flex: 0 0 auto;
   max-width: 100%;
   margin-left: auto;
-  padding: 7px 10px;
+  padding: 8px 14px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
@@ -555,8 +561,8 @@ button:focus-visible {
 .level-title {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #bcbcbc;
+  letter-spacing: 0.10em;
+  color: #c2c2c2;
 }
 .level-gauge {
   position: relative;
@@ -594,7 +600,7 @@ button:focus-visible {
 }
 .level-type {
   font-size: 11px;
-  color: #bcbcbc;
+  color: #adb3ba;
   letter-spacing: 0.08em;
   font-weight: 600;
 }
@@ -621,11 +627,13 @@ button:focus-visible {
 }
 .level-cp-end span {
   font-size: 10px;
-  color: #a7a7a7;
-  letter-spacing: 0.05em;
+  color: #a5adb6;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 .level-cp-end strong {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
   color: #ffffff;
 }
 .level-cp-end-max {
@@ -634,9 +642,10 @@ button:focus-visible {
 }
 .level-display .result-cp {
   margin-top: 11px;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 400;
   text-align: center;
-  color: #bcbcbc;
+  color: #b7bdc5;
 }
 .result-badge-row {
   display: flex;
@@ -716,14 +725,44 @@ button:focus-visible {
 /* Shared compact IV rulers: 30px per value, red selection accent */
 .iv-ruler-wrapper {
   min-width: 0;
+  margin-bottom: 0; /* 16px gap instead of the old 24px */
 }
 
-.stat-emoji {
-  display: inline-block;
-  margin-right: 6px;
-  font-size: 17px;
-  vertical-align: -2px;
+.iv-ruler-wrapper .slider-header {
+  margin-bottom: 6px;
 }
+
+/* Material Symbols at their native 20px optical size. */
+.iv-stat-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.material-symbols-outlined.stat-icon {
+  display: inline-block;
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  white-space: nowrap;
+  text-transform: none;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  flex-shrink: 0;
+}
+
+.stat-icon-atk { color: var(--atk-accent); }
+.stat-icon-def { color: var(--def-icon-accent); }
+.stat-icon-hp { color: var(--hp-icon-accent); }
+
+/* The result panel is always dark, so its Attack arc and label
+   can share the same theme-aware energetic orange. */
+#atk-arc { stroke: var(--atk-accent); }
+.stat-label-atk { color: var(--atk-accent); }
 
 .ruler-value {
   display: inline-block;
@@ -772,8 +811,10 @@ input[type=range].iv-ruler-source {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
+  /* Both ends soften equally, including the 0 side.
+     Selected 0 and 15 remain centered, fully opaque and legible. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
 }
 
 .iv-ruler:active {
