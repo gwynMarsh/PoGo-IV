@@ -896,6 +896,8 @@ input[type=range].iv-ruler-source {
   background: var(--ruler-neutral-color);
   border-radius: 2px;
   transition: background-color 180ms ease 35ms;
+  flex-shrink: 0;
+  border-radius: 0;
 }
 
 .iv-ruler-tick.major .iv-ruler-tick-mark {
