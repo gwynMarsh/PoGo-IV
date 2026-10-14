@@ -39,23 +39,26 @@
       <button class="cp-btn" type="button" onclick="changeCP(1)">+</button>
     </div>
     
-    <!-- Attack Slider -->
-    <div class="slider-wrapper">
+    <!-- Experimental Attack IV ruler. Defense and HP remain traditional sliders. -->
+    <div class="slider-wrapper attack-ruler-wrapper">
       <div class="slider-header">
-        <span>Attack</span>
-        <div class="digit-roller" id="atk-val-roller"></div>
+        <span><span class="stat-emoji" aria-hidden="true">⚔️</span>Attack</span>
+        <span class="ruler-value" id="atk-val-roller" aria-hidden="true">15</span>
       </div>
-      <div class="slider-container-inner">
-        <div class="slider-marks top-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <input type="range" id="atk" class="slider" aria-label="Attack IV" min="0" max="15" step="1" value="15" oninput="updateVal('atk'); calcAll()">
-        <div class="slider-marks bottom-marks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <input type="range" id="atk" class="iv-ruler-source" min="0" max="15" step="1" value="15" tabindex="-1" aria-hidden="true">
+      <div class="iv-ruler-shell">
+        <div id="atk-ruler" class="iv-ruler" role="slider" tabindex="0" aria-label="Attack IV"
+          aria-valuemin="0" aria-valuemax="15" aria-valuenow="15" aria-valuetext="15 of 15">
+        </div>
+        <div class="iv-ruler-pointer" aria-hidden="true"></div>
       </div>
+      <div class="iv-ruler-hint">Swipe or tap a tick · Use arrow keys on desktop</div>
     </div>
 
-    <!-- Defense Slider -->
+        <!-- Defense Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
-        <span>Defense</span>
+        <span><span class="stat-emoji" aria-hidden="true">🛡️</span>Defense</span>
         <div class="digit-roller" id="def-val-roller"></div>
       </div>
       <div class="slider-container-inner">
@@ -68,7 +71,7 @@
     <!-- HP Slider -->
     <div class="slider-wrapper">
       <div class="slider-header">
-        <span>HP</span>
+        <span><span class="stat-emoji" aria-hidden="true">❤️</span>HP</span>
         <div class="digit-roller" id="hp-val-roller"></div>
       </div>
       <div class="slider-container-inner">
@@ -118,7 +121,7 @@
         <div class="gauge-box">
           <svg viewBox="0 0 36 21" class="gauge-svg">
             <path d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round"/>
-            <path id="atk-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#FF5252" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.3s ease;"/>
+            <path id="atk-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#FF5252" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.16s ease;"/>
           </svg>
           <div class="gauge-val-container">
             <div class="digit-roller" id="atk-gauge-roller"></div>
@@ -131,7 +134,7 @@
         <div class="gauge-box">
           <svg viewBox="0 0 36 21" class="gauge-svg">
             <path d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round"/>
-            <path id="def-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#4DF1FF" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.3s ease;"/>
+            <path id="def-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#4DF1FF" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.16s ease;"/>
           </svg>
           <div class="gauge-val-container">
             <div class="digit-roller" id="def-gauge-roller"></div>
@@ -144,7 +147,7 @@
         <div class="gauge-box">
           <svg viewBox="0 0 36 21" class="gauge-svg">
             <path d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round"/>
-            <path id="hp-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#5CFF40" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.3s ease;"/>
+            <path id="hp-arc" d="M 3 18 A 15 15 0 0 1 33 18" fill="none" stroke="#5CFF40" stroke-width="3" stroke-linecap="round" stroke-dasharray="47.12" stroke-dashoffset="47.12" style="transition: stroke-dashoffset 0.16s ease;"/>
           </svg>
           <div class="gauge-val-container">
             <div class="digit-roller" id="hp-gauge-roller"></div>

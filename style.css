@@ -703,3 +703,173 @@ button:focus-visible {
     padding-right: 40px;
   }
 }
+
+
+/* Experimental Attack IV ruler: 30px per value, neutral-silver accent */
+.attack-ruler-wrapper {
+  min-width: 0;
+}
+
+.stat-emoji {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 17px;
+  vertical-align: -2px;
+}
+
+.ruler-value {
+  display: inline-block;
+  min-width: 2ch;
+  font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--val-color);
+  text-align: right;
+  will-change: auto;
+}
+
+input[type=range].iv-ruler-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.iv-ruler-shell {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.iv-ruler {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  padding-inline: calc(50% - 15px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
+}
+
+.iv-ruler:active {
+  cursor: grabbing;
+}
+
+.iv-ruler::-webkit-scrollbar {
+  display: none;
+}
+
+.iv-ruler-tick {
+  display: flex;
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 72px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 7px;
+  scroll-snap-align: center;
+  color: var(--slider-text);
+  cursor: pointer;
+}
+
+.iv-ruler-tick-label {
+  display: block;
+  min-height: 17px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+}
+
+.iv-ruler-tick-mark {
+  display: block;
+  width: 2px;
+  height: 25px;
+  margin-bottom: 7px;
+  background: var(--mark-color);
+  border-radius: 2px;
+  transition: background-color 0.16s ease;
+}
+
+.iv-ruler-tick.major .iv-ruler-tick-mark {
+  height: 36px;
+  background: var(--mark-accent);
+}
+
+.iv-ruler-tick.selected .iv-ruler-tick-mark {
+  background: var(--val-color);
+}
+
+/* Only numbered major ticks have a highlighted number. */
+.iv-ruler-tick.selected.major .iv-ruler-tick-label {
+  color: var(--val-color);
+}
+
+.iv-ruler-tick.flash .iv-ruler-tick-mark {
+  animation: ruler-mark-flash 0.18s ease-out;
+}
+.iv-ruler-tick.flash.major .iv-ruler-tick-label {
+  animation: ruler-label-flash 0.18s ease-out;
+}
+
+@keyframes ruler-mark-flash {
+  35% { filter: brightness(1.35); box-shadow: 0 0 0 3px rgba(255,91,101,0.14); }
+  100% { filter: brightness(1); box-shadow: none; }
+}
+@keyframes ruler-label-flash {
+  35% { filter: brightness(1.35); }
+  100% { filter: brightness(1); }
+}
+
+.iv-ruler-pointer {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid var(--val-color);
+  transition: none;
+  animation: none;
+  pointer-events: none;
+}
+
+.iv-ruler-hint {
+  margin-top: 2px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--slider-text);
+}
+
+.iv-ruler:focus-visible {
+  outline: 3px solid var(--val-color);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iv-ruler { scroll-behavior: auto; }
+  .iv-ruler-tick.flash .iv-ruler-tick-mark,
+  .iv-ruler-tick.flash.major .iv-ruler-tick-label { animation: none; }
+  .iv-ruler-tick-mark { transition: none; }
+}
