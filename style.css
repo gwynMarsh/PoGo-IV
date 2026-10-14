@@ -15,9 +15,6 @@
   --result-border: transparent;
   --result-shadow: rgba(0, 0, 0, 0.20);
   --slider-accent: #64748B;
-  --ruler-endcap-1: rgba(90, 90, 96, 0.52);
-  --ruler-endcap-2: rgba(90, 90, 96, 0.30);
-  --ruler-endcap-3: rgba(90, 90, 96, 0.12);
 }
 
 body.dark-mode {
@@ -37,9 +34,6 @@ body.dark-mode {
   --result-border: #363a42;
   --result-shadow: rgba(0, 0, 0, 0.48); 
   --slider-accent: #C1C4CB;
-  --ruler-endcap-1: rgba(160, 160, 170, 0.40);
-  --ruler-endcap-2: rgba(160, 160, 170, 0.23);
-  --ruler-endcap-3: rgba(160, 160, 170, 0.10);
 }
   
 body { 
@@ -869,42 +863,6 @@ input[type=range].iv-ruler-source {
   height: 28px;
   background: var(--mark-accent);
 }
-
-/* Decorative terminal ticks at BOTH 0 and 15.
-   A box-shadow only paints the extra marks; it does not enlarge the
-   scrollable area, create false IV values, or alter 30px snapping.
-   The shadows fade outward without obscuring the selected end tick. */
-.iv-ruler-tick:first-child,
-.iv-ruler-tick:last-child {
-  position: relative;
-}
-
-.iv-ruler-tick:first-child::after,
-.iv-ruler-tick:last-child::after {
-  content: "";
-  position: absolute;
-  left: calc(50% - 1px);
-  bottom: 5px;
-  width: 2px;
-  height: 20px;
-  background: transparent;
-  pointer-events: none;
-}
-
-.iv-ruler-tick:first-child::after {
-  box-shadow:
-    -30px 0 0 var(--ruler-endcap-1),
-    -60px 0 0 var(--ruler-endcap-2),
-    -90px 0 0 var(--ruler-endcap-3);
-}
-
-.iv-ruler-tick:last-child::after {
-  box-shadow:
-    30px 0 0 var(--ruler-endcap-1),
-    60px 0 0 var(--ruler-endcap-2),
-    90px 0 0 var(--ruler-endcap-3);
-}
-
 
 .iv-ruler-tick.selected .iv-ruler-tick-mark {
   background: var(--val-color);
