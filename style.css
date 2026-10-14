@@ -82,6 +82,14 @@ input[type="number"] {
   transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
+/* Compact Pokémon and CP fields. 16px avoids iPhone Safari focus zoom. */
+#name,
+#cp {
+  font-size: 16px;
+  padding: 10px 12px;
+  min-height: 46px;
+}
+
 /* Remove default browser spin buttons / steppers in WebKit & Firefox */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -752,7 +760,7 @@ input[type=range].iv-ruler-source {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  height: 80px;
+  height: 68px;
   padding-inline: calc(50% - 15px);
   overflow-x: auto;
   overflow-y: hidden;
@@ -781,11 +789,11 @@ input[type=range].iv-ruler-source {
   box-sizing: border-box;
   flex: 0 0 30px;
   width: 30px;
-  height: 72px;
+  height: 60px;
   align-items: center;
   justify-content: flex-end;
   flex-direction: column;
-  gap: 7px;
+  gap: 5px;
   scroll-snap-align: center;
   color: var(--slider-text);
   cursor: pointer;
@@ -793,24 +801,25 @@ input[type=range].iv-ruler-source {
 
 .iv-ruler-tick-label {
   display: block;
-  min-height: 17px;
+  min-height: 15px;
   font-size: 12px;
   font-weight: 600;
-  line-height: 17px;
+  line-height: 15px;
+  transition: color 180ms ease 35ms;
 }
 
 .iv-ruler-tick-mark {
   display: block;
   width: 2px;
-  height: 25px;
-  margin-bottom: 7px;
+  height: 20px;
+  margin-bottom: 5px;
   background: var(--mark-color);
   border-radius: 2px;
-  transition: background-color 0.16s ease;
+  transition: background-color 180ms ease 35ms;
 }
 
 .iv-ruler-tick.major .iv-ruler-tick-mark {
-  height: 36px;
+  height: 28px;
   background: var(--mark-accent);
 }
 
@@ -823,42 +832,26 @@ input[type=range].iv-ruler-source {
   color: var(--val-color);
 }
 
-.iv-ruler-tick.flash .iv-ruler-tick-mark {
-  animation: ruler-mark-flash 0.18s ease-out;
-}
-.iv-ruler-tick.flash.major .iv-ruler-tick-label {
-  animation: ruler-label-flash 0.18s ease-out;
-}
-
-@keyframes ruler-mark-flash {
-  35% { filter: brightness(1.35); box-shadow: 0 0 0 3px rgba(255,91,101,0.14); }
-  100% { filter: brightness(1); box-shadow: none; }
-}
-@keyframes ruler-label-flash {
-  35% { filter: brightness(1.35); }
-  100% { filter: brightness(1); }
-}
-
 .iv-ruler-pointer {
   position: absolute;
   left: 50%;
-  bottom: 2px;
+  bottom: 1px;
   width: 0;
   height: 0;
   transform: translateX(-50%);
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 12px solid var(--val-color);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 10px solid var(--val-color);
   transition: none;
   animation: none;
   pointer-events: none;
 }
 
 .iv-ruler-hint {
-  margin-top: 2px;
+  margin-top: 0;
   text-align: center;
-  font-size: 11px;
-  line-height: 1.4;
+  font-size: 10px;
+  line-height: 1.35;
   color: var(--slider-text);
 }
 
@@ -869,7 +862,6 @@ input[type=range].iv-ruler-source {
 
 @media (prefers-reduced-motion: reduce) {
   .iv-ruler { scroll-behavior: auto; }
-  .iv-ruler-tick.flash .iv-ruler-tick-mark,
-  .iv-ruler-tick.flash.major .iv-ruler-tick-label { animation: none; }
-  .iv-ruler-tick-mark { transition: none; }
+  .iv-ruler-tick-mark,
+  .iv-ruler-tick-label { transition: none; }
 }
