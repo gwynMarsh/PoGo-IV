@@ -17,8 +17,12 @@ let lowerCaseDb = {};
       document.body.classList.toggle('dark-mode', isDark);
       const button = document.getElementById('theme-btn');
       if (button) {
-        button.innerText = isDark ? '☀️' : '🌙';
-        button.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+        const nextTheme = isDark ? 'light' : 'dark';
+        const label = 'Switch to ' + nextTheme + ' theme';
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
       }
     }
 
