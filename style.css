@@ -799,6 +799,10 @@ button:focus-visible {
 #atk-arc { stroke: var(--atk-accent); }
 .stat-label-atk { color: var(--atk-accent); }
 
+.iv-stat-atk { --iv-selection-color: var(--atk-accent); }
+.iv-stat-def { --iv-selection-color: var(--def-icon-accent); }
+.iv-stat-hp { --iv-selection-color: var(--hp-icon-accent); }
+
 .ruler-value {
   display: inline-block;
   min-width: 2ch;
@@ -807,7 +811,7 @@ button:focus-visible {
   font-weight: 400;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
-  color: var(--val-color);
+  color: var(--iv-selection-color, var(--val-color));
   text-align: right;
   will-change: auto;
 }
@@ -906,12 +910,12 @@ input[type=range].iv-ruler-source {
 }
 
 .iv-ruler-tick.selected .iv-ruler-tick-mark {
-  background: var(--val-color);
+  background: var(--iv-selection-color, var(--val-color));
 }
 
 /* Only numbered major ticks have a highlighted number. */
 .iv-ruler-tick.selected.major .iv-ruler-tick-label {
-  color: var(--val-color);
+  color: var(--iv-selection-color, var(--val-color));
 }
 
 .iv-ruler-pointer {
@@ -923,14 +927,14 @@ input[type=range].iv-ruler-source {
   transform: translateX(-50%);
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 10px solid var(--val-color);
+  border-bottom: 10px solid var(--iv-selection-color, var(--val-color));
   transition: none;
   animation: none;
   pointer-events: none;
 }
 
 .iv-ruler:focus-visible {
-  outline: 3px solid var(--val-color);
+  outline: 3px solid var(--iv-selection-color, var(--val-color));
   outline-offset: 2px;
 }
 
