@@ -360,6 +360,18 @@ let lowerCaseDb = {};
       resetGauges();
     }
 
+// The static CP multiplier table only needs sorting once.
+let sortedLevelsCache = null;
+function getSortedLevels() {
+  if (sortedLevelsCache === null) {
+    sortedLevelsCache = Object.entries(cpmTable)
+      .map(([level, cpm]) => ({ level: Number(level), cpm: Number(cpm) }))
+      .filter(item => Number.isFinite(item.level) && Number.isFinite(item.cpm))
+      .sort((a, b) => a.level - b.level);
+  }
+  return sortedLevelsCache;
+}
+
 function calcAll() {
   const resMain = document.getElementById('result-main');
   const resStars = document.getElementById('result-stars');
@@ -406,10 +418,7 @@ function calcAll() {
         return;
       }
 
-      const levels = Object.entries(cpmTable)
-        .map(([level, cpm]) => ({ level: Number(level), cpm: Number(cpm) }))
-        .filter(item => Number.isFinite(item.level) && Number.isFinite(item.cpm))
-        .sort((a, b) => a.level - b.level);
+      const levels = getSortedLevels();
 
       if (!levels.length) {
         showInvalidResult('CPM table unavailable');
@@ -453,14 +462,16 @@ const totalAtk = base[0] + atkIV;
 const totalDef = base[1] + defIV;
 const totalSta = base[2] + hpIV;
 
-const bestMatch = levels.reduce((best, item) => {
-  const bestCP = calculateCP(base, atkIV, defIV, hpIV, best.cpm);
-  const itemCP = calculateCP(base, atkIV, defIV, hpIV, item.cpm);
-
-  return Math.abs(itemCP - cp) < Math.abs(bestCP - cp)
-    ? item
-    : best;
-});
+let bestMatch = levels[0];
+let closestDifference = Math.abs(calculateCP(base, atkIV, defIV, hpIV, bestMatch.cpm) - cp);
+for (let i = 1; i < levels.length; i++) {
+  const difference = Math.abs(calculateCP(base, atkIV, defIV, hpIV, levels[i].cpm) - cp);
+  // Preserve the original tie-break rule: prefer the earlier (lower) level.
+  if (difference < closestDifference) {
+    bestMatch = levels[i];
+    closestDifference = difference;
+  }
+}
 
 const selectedCPM = bestMatch.cpm;
 const estimatedCP = calculateCP(base, atkIV, defIV, hpIV, selectedCPM);
